@@ -76,6 +76,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\CSharp.WithExtension\CSharp.WithExtension.csproj">
+      <Project>{0b0e7a52-6631-4d55-bb9a-1d1892e2cfde}</Project>
+      <Name>CSharp.WithExtension</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
