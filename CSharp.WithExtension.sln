@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.WithExtension", "src\CSharp.WithExtension.csproj", "{0B0E7A52-6631-4D55-BB9A-1D1892E2CFDE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.WithExtension.Tests", "tests\CSharp.WithExtension.Tests\CSharp.WithExtension.Tests.csproj", "{5FAF10E4-940F-4A10-B273-DCDA88935C59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.WithExtension", "src\CSharp.WithExtension\CSharp.WithExtension.csproj", "{0B0E7A52-6631-4D55-BB9A-1D1892E2CFDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,6 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5FAF10E4-940F-4A10-B273-DCDA88935C59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FAF10E4-940F-4A10-B273-DCDA88935C59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FAF10E4-940F-4A10-B273-DCDA88935C59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FAF10E4-940F-4A10-B273-DCDA88935C59}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0B0E7A52-6631-4D55-BB9A-1D1892E2CFDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B0E7A52-6631-4D55-BB9A-1D1892E2CFDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B0E7A52-6631-4D55-BB9A-1D1892E2CFDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
