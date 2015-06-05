@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ITypeBuilder.cs" />
+    <Compile Include="TypeBuilders\SlowTypeBuilder.cs" />
     <Compile Include="WithExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

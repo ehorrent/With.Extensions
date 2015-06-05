@@ -17,8 +17,8 @@ namespace System
             where TType : class
         {
             // Check if unique constructor is available
-            var constructors = me.GetType().GetConstructors();
-            if (1 != constructors.Length)
+            var ctors = typeof(TType).GetConstructors();
+            if (1 != ctors.Length)
                 throw new InvalidOperationException("Type must only contain one constructor");
 
             // Check if lambda is valid
@@ -35,13 +35,23 @@ namespace System
 
             var fieldName = char.ToLowerInvariant(fieldInfo.Name[0]) + fieldInfo.Name.Substring(1);;
 
-            // Get constructor
-            var ctorInfo = constructors[0];
-            var ctorParams = ctorInfo.GetParameters();
-            var param = ctorParams.FirstOrDefault(p => p.Name == fieldName);
+            // Get constructor parameters
+            var ctor = ctors[0];
+            var ctorParams = ctor.GetParameters();
 
-            //
-            return _typeBuilder.Create<TType>(new object[]{});
+            // Get arguments values
+            var fields = typeof (TType).GetFields();
+            var arguments = ctorParams.Select((param, index) =>
+            {
+                if (param.Name == fieldName)
+                    return (object)value;
+
+                // Get current field value
+                return fields.First(field => field.Name.ToLower() == param.Name.ToLower())
+                             .GetValue(me);
+            });
+
+            return _typeBuilder.Create<TType>(arguments);
         }
     }
 }

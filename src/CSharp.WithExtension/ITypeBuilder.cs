@@ -1,7 +1,9 @@
-﻿namespace System
+﻿using System.Collections.Generic;
+
+namespace System
 {
     public interface ITypeBuilder
     {
-        T Create<T>(object[] parameters);
+        T Create<T>(IEnumerable<object> parameters);
     }
 }
