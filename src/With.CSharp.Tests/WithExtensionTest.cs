@@ -13,13 +13,6 @@ namespace With.CSharp.Tests
         [ExpectedException(exceptionType: typeof(InvalidOperationException))]
         public void With_MultipleCtors_Exception()
         {
-            // Setup
-            var stubFactory = MockRepository.GenerateStub<IInstanceProviderFactory>();
-            stubFactory.Stub(x => x.GetProvider<Immutable_MultipleCtors>(new[] { typeof(string), typeof(string) }))
-                       .Return(args => new Immutable_MultipleCtors((string)args[0], (string)args[1]));
-
-            WithExtension.Factory = stubFactory;
-
             // Test
             var obj = new Immutable_MultipleCtors();
             obj.With(current => current.FirstField, "New first Value");
@@ -29,13 +22,6 @@ namespace With.CSharp.Tests
         [ExpectedException(exceptionType: typeof(ArgumentException))]
         public void With_LambdaIsConstantAccess_Exception()
         {
-            // Setup
-            var stubFactory = MockRepository.GenerateStub<IInstanceProviderFactory>();
-            stubFactory.Stub(x => x.GetProvider<Tuple<string, int>>(new[] { typeof(string), typeof(int) }))
-                       .Return(args => new Tuple<string, int>((string)args[0], (int)args[1]));
-
-            WithExtension.Factory = stubFactory;
-
             // Test
             var obj = Tuple.Create("First Value", 10);
             obj.With(_ => "Constant value", "New first Value");
@@ -50,7 +36,7 @@ namespace With.CSharp.Tests
             stubFactory.Stub(x => x.GetProvider<Tuple<string, int>>(new[] { typeof(string), typeof(int) }))
                        .Return(args => new Tuple<string, int>((string)args[0], (int)args[1]));
 
-            WithExtension.Factory = stubFactory;
+            WithExtension.InstanceProvider = new DefaultInstanceProvider(stubFactory);
 
             // Test
             var obj = Tuple.Create("First Value", 10);
@@ -65,13 +51,13 @@ namespace With.CSharp.Tests
         {
             // Setup
             var stubFactory = MockRepository.GenerateStub<IInstanceProviderFactory>();
-            stubFactory.Stub(x => x.GetProvider<Immutable_OtherNamingconvention>(new[] { typeof(string), typeof(double), typeof(int) }))
-                       .Return(args => new Immutable_OtherNamingconvention((string)args[0], (double)args[1], (int)args[2]));
+            stubFactory.Stub(x => x.GetProvider<Immutable_OtherNamingConvention>(new[] { typeof(string), typeof(double), typeof(int) }))
+                       .Return(args => new Immutable_OtherNamingConvention((string)args[0], (double)args[1], (int)args[2]));
 
-            WithExtension.Factory = stubFactory;
+            WithExtension.InstanceProvider = new DefaultInstanceProvider(stubFactory);
             
             // Test
-            var obj = new Immutable_OtherNamingconvention("First Value", 2D, 3);
+            var obj = new Immutable_OtherNamingConvention("First Value", 2D, 3);
             obj.With(current => current.m_FirstField, "New first Value");
         }
 
@@ -83,7 +69,7 @@ namespace With.CSharp.Tests
             stubFactory.Stub(x => x.GetProvider<Mutable>(new[] { typeof(string), typeof(string) }))
                        .Return(args => new Mutable((string)args[0], (string)args[1]));
 
-            WithExtension.Factory = stubFactory;
+            WithExtension.InstanceProvider = new DefaultInstanceProvider(stubFactory);
 
             // Test
             var obj = new Mutable("First Value", "Second value");
@@ -102,7 +88,7 @@ namespace With.CSharp.Tests
             stubFactory.Stub(x => x.GetProvider<Immutable>(new[] { typeof(string), typeof(DateTime), typeof(int) }))
                        .Return(args => new Immutable((string)args[0], (DateTime)args[1], (int)args[2]));
 
-            WithExtension.Factory = stubFactory;
+            WithExtension.InstanceProvider = new DefaultInstanceProvider(stubFactory);
 
             // Test
             var obj = new Immutable("First Value", new DateTime(2000, 01, 01), 120);
@@ -118,11 +104,11 @@ namespace With.CSharp.Tests
         public void With_ImmutableChangeProperty_Ok()
         {
             // Setup
-            var stubFactory = MockRepository.GenerateStub<IInstanceProviderFactory>();
-            stubFactory.Stub(x => x.GetProvider<Tuple<string, int>>(new[] { typeof(string), typeof(int) }))
-                       .Return(args => new Tuple<string, int>((string)args[0], (int)args[1]));
-
-            WithExtension.Factory = stubFactory;
+            var stubProvider = MockRepository.GenerateStub<IInstanceProvider>();
+            stubProvider.Stub(x => x.Create<Tuple<string, int>>(new object[] { "New first Value", 10}))
+                        .Return(Tuple.Create("New first Value", 10));
+            
+            WithExtension.InstanceProvider = stubProvider;
 
             // Test
             var obj = Tuple.Create("First Value", 10);

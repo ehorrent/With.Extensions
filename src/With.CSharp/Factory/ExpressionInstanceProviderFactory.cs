@@ -17,7 +17,7 @@ namespace With.CSharp.Factory
                 constructorSignature.ToArray(),
                 new ParameterModifier[0]);
 
-            // Convert enumeration to array
+            // Get arguments
             var argsExpr = Expression.Parameter(typeof(object[]), "arguments");
 
             // Get constructor parameters values

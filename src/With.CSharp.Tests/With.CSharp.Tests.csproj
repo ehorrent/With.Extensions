@@ -59,7 +59,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ClassPatterns\Immutable_OtherNamingconvention.cs" />
+    <Compile Include="ClassPatterns\Immutable_OtherNamingConvention.cs" />
     <Compile Include="ClassPatterns\Immutable.cs" />
     <Compile Include="ClassPatterns\Mutable.cs" />
     <Compile Include="ClassPatterns\Immutable_MultipleCtors.cs" />

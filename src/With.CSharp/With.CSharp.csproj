@@ -40,12 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultInstanceProvider.cs" />
+    <Compile Include="IInstanceProvider.cs" />
     <Compile Include="Factory\IInstanceProviderFactory.cs" />
     <Compile Include="Factory\ExpressionInstanceProviderFactory.cs" />
-    <Compile Include="Factory\IInstanceProviderFactoryExtensions.cs" />
     <Compile Include="Factory\CacheInstanceProviderFactory.cs" />
     <Compile Include="Factory\DefaultInstanceProviderFactory.cs" />
-    <Compile Include="Naming\DefaultMemberNameBinder.cs" />
     <Compile Include="Naming\IMemberNameBinder.cs" />
     <Compile Include="WithExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

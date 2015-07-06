@@ -1,13 +1,14 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using With.CSharp.Factory;
+using With.CSharp;
 
 namespace System
 {
     public static class WithExtension
     {
-        public static IInstanceProviderFactory Factory
+        public static IInstanceProvider InstanceProvider
         {
             private get;
             set;
@@ -46,11 +47,6 @@ namespace System
                         "Field/property not accessed from parameter named '{0}'",
                         selector.Parameters[0].Name));
 
-            var fieldPropertyName =
-                string.Concat(
-                    char.ToLowerInvariant(memberExpression.Member.Name[0]),
-                    memberExpression.Member.Name.Substring(1));
-
             // Get constructor parameters
             var ctor = ctors[0];
             var ctorParams = ctor.GetParameters();
@@ -58,7 +54,7 @@ namespace System
             // Get arguments values
             var arguments = ctorParams.Select((param, index) =>
             {
-                if (param.Name == fieldPropertyName)
+                if (param.Name.ToLower(CultureInfo.InvariantCulture) == memberExpression.Member.Name.ToLower(CultureInfo.InvariantCulture))
                     return (object)value;
 
                 // Field ?
@@ -77,7 +73,7 @@ namespace System
                         param.Name));
             }).ToArray();
 
-            return Factory.Create<TType>(arguments);
+            return InstanceProvider.Create<TType>(arguments);
         }
     }
 }
