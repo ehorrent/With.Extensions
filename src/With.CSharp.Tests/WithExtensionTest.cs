@@ -1,76 +1,134 @@
 ﻿using System;
 using NUnit.Framework;
 using Rhino.Mocks;
+using With.CSharp.Factory;
+using With.CSharp.Tests.ClassPatterns;
 
-namespace CSharp.WithExtension.Tests
+namespace With.CSharp.Tests
 {
     [TestFixture]
     public class WithExtensionTest
     {
-        private class MultipleCtor
-        {
-            public readonly string FirstField;
-            public readonly string SecondField;
-
-            public MultipleCtor()
-            {
-            }
-
-            public MultipleCtor(string firstField, string secondField)
-            {
-                this.FirstField = firstField;
-                this.SecondField = secondField;
-            }
-        }
-
-        private class ImmutableClass
-        {
-            public readonly string FirstField;
-            public readonly int SecondField;
-
-            public ImmutableClass(string firstField, int secondField)
-            {
-                this.FirstField = firstField;
-                this.SecondField = secondField;
-            }
-
-            public ImmutableClass WithFirstField(string firstField)
-            {
-                return new ImmutableClass(firstField, this.SecondField);
-            }
-        }
-
         [Test]
         [ExpectedException(exceptionType: typeof(InvalidOperationException))]
-        public void With_MultipleCtor_Exception()
+        public void With_MultipleCtors_Exception()
         {
             // Setup
             var stubFactory = MockRepository.GenerateStub<IInstanceProviderFactory>();
-            stubFactory.Stub(x => x.GetProvider<MultipleCtor>(new[] { typeof(string), typeof(string) }))
-                       .Return(args => new MultipleCtor((string)args[0], (string)args[1]));
+            stubFactory.Stub(x => x.GetProvider<Immutable_MultipleCtors>(new[] { typeof(string), typeof(string) }))
+                       .Return(args => new Immutable_MultipleCtors((string)args[0], (string)args[1]));
 
-            System.WithExtension.Factory = stubFactory;
+            WithExtension.Factory = stubFactory;
 
             // Test
-            var obj = new MultipleCtor();
+            var obj = new Immutable_MultipleCtors();
             obj.With(current => current.FirstField, "New first Value");
         }
 
         [Test]
-        public void With_ChangeValue_Ok()
+        [ExpectedException(exceptionType: typeof(ArgumentException))]
+        public void With_LambdaIsConstantAccess_Exception()
         {
             // Setup
             var stubFactory = MockRepository.GenerateStub<IInstanceProviderFactory>();
-            stubFactory.Stub(x => x.GetProvider<ImmutableClass>(new[] { typeof(string), typeof(int) }))
-                       .Return(args => new ImmutableClass((string)args[0], (int)args[1]));
+            stubFactory.Stub(x => x.GetProvider<Tuple<string, int>>(new[] { typeof(string), typeof(int) }))
+                       .Return(args => new Tuple<string, int>((string)args[0], (int)args[1]));
 
-            System.WithExtension.Factory = stubFactory;
+            WithExtension.Factory = stubFactory;
 
             // Test
-            var obj = new ImmutableClass("First Value", 10);
+            var obj = Tuple.Create("First Value", 10);
+            obj.With(_ => "Constant value", "New first Value");
+        }
+
+        [Test]
+        [ExpectedException(exceptionType: typeof(ArgumentException))]
+        public void With_LambdaIsOtherInstanceMemberAccess_Exception()
+        {
+            // Setup
+            var stubFactory = MockRepository.GenerateStub<IInstanceProviderFactory>();
+            stubFactory.Stub(x => x.GetProvider<Tuple<string, int>>(new[] { typeof(string), typeof(int) }))
+                       .Return(args => new Tuple<string, int>((string)args[0], (int)args[1]));
+
+            WithExtension.Factory = stubFactory;
+
+            // Test
+            var obj = Tuple.Create("First Value", 10);
+            var otherObj = Tuple.Create("Other first Value", 100);
+
+            obj.With(_ => otherObj.Item1, "New first Value");
+        }
+
+        [Test]
+        [ExpectedException(exceptionType: typeof(InvalidOperationException))]
+        public void With_OtherNamingconvention_Exception()
+        {
+            // Setup
+            var stubFactory = MockRepository.GenerateStub<IInstanceProviderFactory>();
+            stubFactory.Stub(x => x.GetProvider<Immutable_OtherNamingconvention>(new[] { typeof(string), typeof(double), typeof(int) }))
+                       .Return(args => new Immutable_OtherNamingconvention((string)args[0], (double)args[1], (int)args[2]));
+
+            WithExtension.Factory = stubFactory;
+            
+            // Test
+            var obj = new Immutable_OtherNamingconvention("First Value", 2D, 3);
+            obj.With(current => current.m_FirstField, "New first Value");
+        }
+
+        [Test]
+        public void With_MutableChangeProperty_Ok()
+        {
+            // Setup
+            var stubFactory = MockRepository.GenerateStub<IInstanceProviderFactory>();
+            stubFactory.Stub(x => x.GetProvider<Mutable>(new[] { typeof(string), typeof(string) }))
+                       .Return(args => new Mutable((string)args[0], (string)args[1]));
+
+            WithExtension.Factory = stubFactory;
+
+            // Test
+            var obj = new Mutable("First Value", "Second value");
+            var obj2 = obj.With(current => current.FirstField, "New first Value");
+
+            Assert.IsTrue(
+                obj2.FirstField == "New first Value" &&
+                obj2.SecondField == obj.SecondField);
+        }
+
+        [Test]
+        public void With_ImmutableChangeField_Ok()
+        {
+            // Setup
+            var stubFactory = MockRepository.GenerateStub<IInstanceProviderFactory>();
+            stubFactory.Stub(x => x.GetProvider<Immutable>(new[] { typeof(string), typeof(DateTime), typeof(int) }))
+                       .Return(args => new Immutable((string)args[0], (DateTime)args[1], (int)args[2]));
+
+            WithExtension.Factory = stubFactory;
+
+            // Test
+            var obj = new Immutable("First Value", new DateTime(2000, 01, 01), 120);
             var obj2 = obj.With(o => o.FirstField, "New first Value");
 
-            Assert.IsTrue(obj2.FirstField == "New first Value" && obj2.SecondField == obj.SecondField);
+            Assert.IsTrue(
+                obj2.FirstField == "New first Value" && 
+                obj2.SecondField == obj.SecondField &&
+                obj2.ThirdField == obj.ThirdField);
+        }
+
+        [Test]
+        public void With_ImmutableChangeProperty_Ok()
+        {
+            // Setup
+            var stubFactory = MockRepository.GenerateStub<IInstanceProviderFactory>();
+            stubFactory.Stub(x => x.GetProvider<Tuple<string, int>>(new[] { typeof(string), typeof(int) }))
+                       .Return(args => new Tuple<string, int>((string)args[0], (int)args[1]));
+
+            WithExtension.Factory = stubFactory;
+
+            // Test
+            var obj = Tuple.Create("First Value", 10);
+            var obj2 = obj.With(o => o.Item1, "New first Value");
+
+            Assert.IsTrue(obj2.Item1 == "New first Value" && obj2.Item2 == obj.Item2);
         }
     }
 }
