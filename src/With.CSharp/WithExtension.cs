@@ -1,57 +1,83 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using With.CSharp.Factory;
 
 namespace System
 {
     public static class WithExtension
     {
-        private static ITypeBuilder _typeBuilder;
-
-        public static void Register(ITypeBuilder builder)
+        public static IInstanceProviderFactory Factory
         {
-            _typeBuilder = builder;
+            private get;
+            set;
         }
 
-        public static TType With<TType, TField>(this TType me, Expression<Func<TType, TField>> projection, TField value) 
+        public static TType With<TType, TField>(this TType me, Expression<Func<TType, TField>> selector, TField value) 
             where TType : class
         {
+            var typeToBuild = typeof(TType);
+
             // Check if unique constructor is available
-            var ctors = typeof(TType).GetConstructors();
+            var ctors = typeToBuild.GetConstructors();
             if (1 != ctors.Length)
-                throw new InvalidOperationException("Type must only contain one constructor");
+                throw new InvalidOperationException("Type " + typeToBuild + " must only contain one constructor");
 
             // Check if lambda is valid
-            var memberExpression = projection.Body as MemberExpression;
+            var memberExpression = selector.Body as MemberExpression;
             if (null == memberExpression)
-                throw new ArgumentException("Lambda is not a member access");
+                throw new ArgumentException(
+                    string.Format(
+                        "Lambda '{0}'is not a member access",
+                        selector.Name));
 
-            var fieldInfo = memberExpression.Member as FieldInfo;
-            if (null == fieldInfo)
-                throw new ArgumentException("Lambda is not a field access");
+            // Check if lambda is a field/property access
+            var isFieldOrPropertyAccess = memberExpression.Member is FieldInfo || memberExpression.Member is PropertyInfo;
+            if (!isFieldOrPropertyAccess)
+                throw new ArgumentException(
+                    string.Format(
+                        "Lambda '{0}' is not a field/property access",
+                        selector.Name));
             
-            if (projection.Parameters.Count != 1 || projection.Parameters[0] != memberExpression.Expression)
-                throw new ArgumentException("Field not accessed from parameter");
+            // Check if field/property is accessed from lambda parameter
+            if (selector.Parameters[0] != memberExpression.Expression)
+                throw new ArgumentException(
+                    string.Format(
+                        "Field/property not accessed from parameter named '{0}'",
+                        selector.Parameters[0].Name));
 
-            var fieldName = char.ToLowerInvariant(fieldInfo.Name[0]) + fieldInfo.Name.Substring(1);;
+            var fieldPropertyName =
+                string.Concat(
+                    char.ToLowerInvariant(memberExpression.Member.Name[0]),
+                    memberExpression.Member.Name.Substring(1));
 
             // Get constructor parameters
             var ctor = ctors[0];
             var ctorParams = ctor.GetParameters();
 
             // Get arguments values
-            var fields = typeof (TType).GetFields();
             var arguments = ctorParams.Select((param, index) =>
             {
-                if (param.Name == fieldName)
+                if (param.Name == fieldPropertyName)
                     return (object)value;
 
-                // Get current field value
-                return fields.First(field => field.Name.ToLower() == param.Name.ToLower())
-                             .GetValue(me);
-            });
+                // Field ?
+                var fieldInfo = typeToBuild.GetField(param.Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+                if (null != fieldInfo)
+                    return fieldInfo.GetValue(me);
+                
+                // Property ?
+                var propertyInfo = typeToBuild.GetProperty(param.Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+                if (null != propertyInfo)
+                    return propertyInfo.GetValue(me);
 
-            return _typeBuilder.Create<TType>(arguments);
+                throw new InvalidOperationException(
+                    string.Format(
+                        "Unable to find value for constructor argument named [{0}]", 
+                        param.Name));
+            }).ToArray();
+
+            return Factory.Create<TType>(arguments);
         }
     }
 }
