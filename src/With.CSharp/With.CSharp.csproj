@@ -42,11 +42,10 @@
   <ItemGroup>
     <Compile Include="DefaultInstanceProvider.cs" />
     <Compile Include="IInstanceProvider.cs" />
-    <Compile Include="Factory\IInstanceProviderFactory.cs" />
-    <Compile Include="Factory\ExpressionInstanceProviderFactory.cs" />
-    <Compile Include="Factory\CacheInstanceProviderFactory.cs" />
-    <Compile Include="Factory\DefaultInstanceProviderFactory.cs" />
-    <Compile Include="Naming\IMemberNameBinder.cs" />
+    <Compile Include="Constructor\IConstructorProvider.cs" />
+    <Compile Include="Constructor\ExpressionConstructorProvider.cs" />
+    <Compile Include="Constructor\CacheConstructorProvider.cs" />
+    <Compile Include="Constructor\DefaultConstructorProvider.cs" />
     <Compile Include="WithExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

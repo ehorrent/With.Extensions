@@ -2,7 +2,7 @@
 
 namespace With.CSharp.Factory
 {
-    public interface IInstanceProviderFactory
+    public interface IConstructorProvider
     {
         Func<object[], T> GetProvider<T>(Type[] constructorSignature) where T : class;
     }

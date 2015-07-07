@@ -6,9 +6,9 @@ namespace With.CSharp
 {
     public class DefaultInstanceProvider : IInstanceProvider
     {
-        private readonly IInstanceProviderFactory _factory;
+        private readonly IConstructorProvider _factory;
 
-        public DefaultInstanceProvider(IInstanceProviderFactory factory)
+        public DefaultInstanceProvider(IConstructorProvider factory)
         {
             if (null == factory) throw new ArgumentNullException("factory");
 

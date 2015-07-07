@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace With.CSharp.Factory
 {
-    public class InstanceProviderFactory: IInstanceProviderFactory
+    public class DefaultConstructorProvider : IConstructorProvider
     {
         public Func<object[], T> GetProvider<T>(Type[] constructorSignature) where T : class
         {

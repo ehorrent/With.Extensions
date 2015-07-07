@@ -4,16 +4,16 @@ using System.Runtime.Caching;
 
 namespace With.CSharp.Factory
 {
-    public class CacheInstanceProviderFactory : IInstanceProviderFactory
+    public class CacheConstructorProvider : IConstructorProvider
     {
         private readonly Dictionary<Type, object> _cache = new Dictionary<Type, object>();
 
-        private readonly IInstanceProviderFactory _instanceProvider;
+        private readonly IConstructorProvider _instanceProvider;
         private readonly MemoryCache _memoryCache;
         private readonly TimeSpan _cacheEntryDelay;
         private readonly Func<DateTime> _getCurrentTime;
 
-        public CacheInstanceProviderFactory(IInstanceProviderFactory instanceProvider, MemoryCache memoryCache, TimeSpan cacheEntryDelay, Func<DateTime> getCurrentTime)
+        public CacheConstructorProvider(IConstructorProvider instanceProvider, MemoryCache memoryCache, TimeSpan cacheEntryDelay, Func<DateTime> getCurrentTime)
         {
             if (null == instanceProvider) throw new ArgumentNullException("instanceProvider");
             if (null == memoryCache) throw new ArgumentNullException("memoryCache");

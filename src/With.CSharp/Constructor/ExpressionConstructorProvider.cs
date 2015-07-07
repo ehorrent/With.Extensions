@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace With.CSharp.Factory
 {
-    public class ExpressionInstanceProvider : IInstanceProviderFactory
+    public class ExpressionConstructorProvider : IConstructorProvider
     {
         public Func<object[], T> GetProvider<T>(Type[] constructorSignature) where T : class
         {
