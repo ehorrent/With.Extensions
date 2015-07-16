@@ -3,11 +3,20 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace With.CSharp.Factory
+namespace With.CSharp.ConstructorProvider
 {
+    /// <summary>
+    /// Constructor provider, using expression trees to create compiled constructors
+    /// </summary>
     public class ExpressionConstructorProvider : IConstructorProvider
     {
-        public Func<object[], T> GetProvider<T>(Type[] constructorSignature) where T : class
+        /// <summary>
+        /// Provides a constructor, based on the given signature
+        /// </summary>
+        /// <typeparam name="T">Type of the instance to be created by the constructor</typeparam>
+        /// <param name="constructorSignature">Constructor's signature</param>
+        /// <returns>Corresponding constructor (if existing)</returns>
+        public Func<object[], T> GetConstructor<T>(Type[] constructorSignature) where T : class
         {
             // Find constructor with matching argument types
             var ctorInfo = typeof(T).GetConstructor(
@@ -26,8 +35,7 @@ namespace With.CSharp.Factory
             {
                 var arrayAccessExpr = Expression.ArrayAccess(
                     argsExpr,
-                    Expression.Constant(index, typeof(int))
-                );
+                    Expression.Constant(index, typeof(int)));
 
                 return Expression.Convert(arrayAccessExpr, param.ParameterType);
             }).ToArray();
