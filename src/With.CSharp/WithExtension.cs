@@ -23,9 +23,9 @@ namespace System
         /// <summary>
         /// Copy and update extension, used to create a copy of an instance with one field/property updated.
         /// Designed to work on immutable classes with a single constructor.
-        /// Names of the parameter's constructor must match names of corresponding fields/properties (case is ignored).
+        /// Names of the constructor's parameters must match names of corresponding public fields/properties (case is ignored).
         /// </summary>
-        /// <typeparam name="TType">Type of the class to modify</typeparam>
+        /// <typeparam name="TType">Type of the class to 'copy and update'</typeparam>
         /// <typeparam name="TField">Type of the field/property to update</typeparam>
         /// <param name="me">Instance to copy and update</param>
         /// <param name="selector">Selector on the field/property to update</param>
@@ -61,7 +61,7 @@ namespace System
             if (selector.Parameters[0] != memberExpression.Expression)
                 throw new ArgumentException(
                     string.Format(
-                        "Field/property not accessed from parameter named '{0}'",
+                        "Field/property not accessed from instance '{0}'",
                         selector.Parameters[0].Name));
 
             // Get constructor parameters
@@ -86,7 +86,7 @@ namespace System
 
                 throw new InvalidOperationException(
                     string.Format(
-                        "Unable to find value for constructor argument named [{0}]", 
+                        "Unable to find a value matching constructor's argument '{0}'", 
                         param.Name));
             }).ToArray();
 
