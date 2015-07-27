@@ -16,7 +16,7 @@ namespace System
         /// </summary>
         public static IInstanceProvider InstanceProvider
         {
-            private get;
+            get;
             set;
         }
 
