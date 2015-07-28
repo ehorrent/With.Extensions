@@ -28,4 +28,10 @@ For example, this class won't work with the extension, because there's not match
             this.m_SecondField = secondField;
         }
     }
+
+    var instance = new Immutable("first value", "second value");
+
+    // Will throw an InvalidOperationException :
+    instance.With(obj => obj.m_FirstField, "new first value");
+
 ```
