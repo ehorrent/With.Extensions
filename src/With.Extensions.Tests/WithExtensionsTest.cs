@@ -1,9 +1,9 @@
 ﻿using System;
 using NUnit.Framework;
 using Rhino.Mocks;
-using With.CSharp.Tests.ClassPatterns;
+using With.Tests.ClassPatterns;
 
-namespace With.CSharp.Tests
+namespace With.Tests
 {
     [TestFixture]
     public class WithExtensionTest
@@ -57,7 +57,7 @@ namespace With.CSharp.Tests
             stubProvider.Stub(x => x.Create<Mutable>(new object[] { newFirstValue, secondValue }))
                         .Return(new Mutable(newFirstValue, secondValue));
 
-            WithExtension.InstanceProvider = stubProvider;
+            WithExtensions.InstanceProvider = stubProvider;
 
             // Test
             var obj = new Mutable("First Value", secondValue);
@@ -80,7 +80,7 @@ namespace With.CSharp.Tests
             stubProvider.Stub(x => x.Create<Immutable>(new object[] { firstValue, newSecondValue, thirdValue }))
                         .Return(new Immutable(firstValue, newSecondValue, thirdValue));
 
-            WithExtension.InstanceProvider = stubProvider;
+            WithExtensions.InstanceProvider = stubProvider;
 
             // Test
             var obj = new Immutable(firstValue, new DateTime(2000, 1, 1), thirdValue);
@@ -103,7 +103,7 @@ namespace With.CSharp.Tests
             stubProvider.Stub(x => x.Create<Tuple<string, int>>(new object[] {newFirstValue, secondValue}))
                         .Return(Tuple.Create(newFirstValue, secondValue));
             
-            WithExtension.InstanceProvider = stubProvider;
+            WithExtensions.InstanceProvider = stubProvider;
 
             // Test
             var obj = Tuple.Create("First Value", secondValue);

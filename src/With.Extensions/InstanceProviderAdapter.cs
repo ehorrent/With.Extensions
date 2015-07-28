@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using With.CSharp.ConstructorProvider;
+using With.ConstructorProvider;
 
-namespace With.CSharp
+namespace With
 {
     /// <summary>
     /// Adapter on an IConstructorProvider to match IInstanceProvider definition

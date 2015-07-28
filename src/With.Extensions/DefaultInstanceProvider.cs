@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 
-namespace With.CSharp
+namespace With
 {
     /// <summary>
     /// Default instance provider, using reflection to create new instances

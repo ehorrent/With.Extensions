@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace With.CSharp.Tests.Factory
+namespace With.Tests.Factory
 {
     [TestFixture]
     public class DefaultInstanceProviderFactoryTests

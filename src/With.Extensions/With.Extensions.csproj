@@ -7,8 +7,8 @@
     <ProjectGuid>{0B0E7A52-6631-4D55-BB9A-1D1892E2CFDE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>With.CSharp</RootNamespace>
-    <AssemblyName>With.CSharp</AssemblyName>
+    <RootNamespace>With.Extensions</RootNamespace>
+    <AssemblyName>With.Extensions</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>1e0d57e4</NuGetPackageImportStamp>
@@ -42,15 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constructor\CacheConstructorProvider.cs">
+    <Compile Include="ConstructorProvider\CacheConstructorProvider.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="InstanceProviderAdapter.cs" />
     <Compile Include="DefaultInstanceProvider.cs" />
     <Compile Include="IInstanceProvider.cs" />
-    <Compile Include="Constructor\IConstructorProvider.cs" />
-    <Compile Include="Constructor\ExpressionConstructorProvider.cs" />
-    <Compile Include="WithExtension.cs" />
+    <Compile Include="ConstructorProvider\IConstructorProvider.cs" />
+    <Compile Include="ConstructorProvider\ExpressionConstructorProvider.cs" />
+    <Compile Include="WithExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

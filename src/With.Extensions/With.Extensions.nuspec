@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+    <metadata>
+        <id>$id$</id>
+        <version>0.1.0</version>
+        <title>$id$</title>
+        <authors>$author$</authors>
+        <owners>$author$</owners>
+        <description>$description$</description>
+        <projectUrl>https://github.com/ehorrent/With.Extensions</projectUrl>
+        <language>en-US</language>
+    </metadata>
+</package>

@@ -1,15 +1,15 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using With.CSharp;
 
-namespace System
+namespace With
 {
     /// <summary>
     /// Provides 'With' method on all classes
     /// </summary>
-    public static class WithExtension
+    public static class WithExtensions
     {
         /// <summary>
         /// Instance provider used by the extension to create new instances

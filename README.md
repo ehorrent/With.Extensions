@@ -1,30 +1,16 @@
-With.CSharp
+With.Extensions
 ===================
 
-**With** extension method used to copy and update immutable classes (as [_copy and update record expression_](https://msdn.microsoft.com/en-us/library/dd233184.aspx) in F#).
+Extension methods used to copy and update immutable classes (as [_copy and update record expression_](https://msdn.microsoft.com/en-us/library/dd233184.aspx) in F#).
 
 ### Usage
-For an immutable class defined like below :
 ```C#
-    public class Immutable
-    {
-        public readonly string FirstField;
-        public readonly string SecondField;
-        public Immutable(string firstField, string secondField)
-        {
-            this.FirstField = firstField;
-            this.SecondField = secondField;
-        }
-    }
-```
-You can create a copy with **one field** modified :
-```C#
-    var initial = new Immutable("first value", "second value");
-    var updated = initial.With(obj => obj.FirstField, "new first value");  
+    var initial = Tuple.Create("first value", "second value");
+    var updated = initial.With(obj => obj.Item1, "new first value");  
 
     Debug.Assert(
-    	obj2.FirstField == "new first value" &&
-    	obj2.SecondField == obj.SecondField);
+    	obj2.Item1 == "new first value" &&
+    	obj2.Item2 == obj.SecondField);
 ```
 
 ### How does it work ?

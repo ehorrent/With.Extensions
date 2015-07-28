@@ -1,4 +1,4 @@
-﻿namespace With.CSharp
+﻿namespace With
 {
     /// <summary>
     /// Defines methods required to create class instances

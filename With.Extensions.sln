@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "With.CSharp", "src\With.CSharp\With.CSharp.csproj", "{0B0E7A52-6631-4D55-BB9A-1D1892E2CFDE}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E7C676A2-2135-44A3-A929-48C7F0C3B289}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "With.CSharp.Tests", "src\With.CSharp.Tests\With.CSharp.Tests.csproj", "{5FAF10E4-940F-4A10-B273-DCDA88935C59}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuspec", "nuspec", "{26BAF5DE-E565-4CCF-BFCC-41BBC22E46A9}"
+	ProjectSection(SolutionItems) = preProject
+		src\With.Extensions\With.Extensions.nuspec = src\With.Extensions\With.Extensions.nuspec
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "With.Extensions", "src\With.Extensions\With.Extensions.csproj", "{0B0E7A52-6631-4D55-BB9A-1D1892E2CFDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "With.Extensions.Tests", "src\With.Extensions.Tests\With.Extensions.Tests.csproj", "{5FAF10E4-940F-4A10-B273-DCDA88935C59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
