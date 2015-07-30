@@ -14,7 +14,7 @@ namespace With.Tests
         {
             // Test
             var obj = new Immutable_MultipleCtors();
-            obj.With(current => current.FirstField, "New first Value");
+            obj.With(current => current.FirstField, "New first Value").Create();
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace With.Tests
         {
             // Test
             var obj = Tuple.Create("First Value", 10);
-            obj.With(_ => "Constant value", "New first Value");
+            obj.With(_ => "Constant value", "New first Value").Create();
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace With.Tests
             var obj = Tuple.Create("First Value", 10);
             var otherObj = Tuple.Create("Other first Value", 100);
 
-            obj.With(_ => otherObj.Item1, "New first Value");
+            obj.With(_ => otherObj.Item1, "New first Value").Create();
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace With.Tests
 
             // Test
             var obj = new Mutable("First Value", secondValue);
-            var obj2 = obj.With(current => current.FirstField, newFirstValue);
+            var obj2 = obj.With(current => current.FirstField, newFirstValue).Create();
 
             Assert.IsTrue(
                 obj2.FirstField == newFirstValue &&
@@ -84,7 +84,7 @@ namespace With.Tests
 
             // Test
             var obj = new Immutable(firstValue, new DateTime(2000, 1, 1), thirdValue);
-            var obj2 = obj.With(o => o.SecondField, newSecondValue);
+            var obj2 = obj.With(o => o.SecondField, newSecondValue).Create();
 
             Assert.IsTrue(
                 obj2.FirstField == obj.FirstField &&
@@ -107,9 +107,64 @@ namespace With.Tests
 
             // Test
             var obj = Tuple.Create("First Value", secondValue);
-            var obj2 = obj.With(o => o.Item1, newFirstValue);
+            var obj2 = obj.With(o => o.Item1, newFirstValue).Create();
 
-            Assert.IsTrue(obj2.Item1 == newFirstValue && obj2.Item2 == obj.Item2);
+            Assert.IsTrue(
+                obj2.Item1 == newFirstValue && 
+                obj2.Item2 == obj.Item2);
+        }
+
+        [Test]
+        public void With_ChainingCalls_Ok()
+        {
+            const string newFirstValue = "New first Value";
+            const int secondValue = 10;
+            const string newThirdValue = "New third Value";
+
+            // Setup
+            var stubProvider = MockRepository.GenerateStub<IInstanceProvider>();
+            stubProvider.Stub(x => x.Create<Tuple<string, int, string>>(new object[] { newFirstValue, secondValue, newThirdValue }))
+                        .Return(Tuple.Create(newFirstValue, secondValue, newThirdValue));
+
+            WithExtensions.InstanceProvider = stubProvider;
+
+            // Test
+            var obj = Tuple.Create("First Value", secondValue, "Third value");
+            var obj2 = obj.With(o => o.Item1, newFirstValue)
+                          .With(o => o.Item3, newThirdValue)
+                          .Create();
+
+            Assert.IsTrue(
+                obj2.Item1 == newFirstValue && 
+                obj2.Item2 == obj.Item2 && 
+                obj2.Item3 == newThirdValue);
+        }
+
+        [Test]
+        public void With_Chaining_SingleCreation()
+        {
+            const string newFirstValue = "New first Value";
+            const int secondValue = 10;
+            const string newThirdValue = "New third Value";
+
+            // Setup
+            var mockProvider = MockRepository.GenerateMock<IInstanceProvider>();
+            var createArg = new object[] {newFirstValue, secondValue, newThirdValue};
+            mockProvider.Stub(x => x.Create<Tuple<string, int, string>>(createArg))
+                        .Return(Tuple.Create(newFirstValue, secondValue, newThirdValue));
+
+            WithExtensions.InstanceProvider = mockProvider;
+
+            // Test
+            var obj = Tuple.Create("First Value", secondValue, "Third value");
+            var obj2 = obj.With(o => o.Item1, newFirstValue)
+                          .With(o => o.Item3, newThirdValue)
+                          .Create();
+
+            mockProvider.AssertWasCalled(
+                provider => provider.Create<Tuple<string, int, string>>(createArg),
+                options => options.Repeat.Times(1)
+            );
         }
     }
 }

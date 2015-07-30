@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using With.Helpers;
+using With.Query;
 
 namespace With
 {
@@ -12,7 +14,15 @@ namespace With
     public static class WithExtensions
     {
         /// <summary>
-        /// Instance provider used by the extension to create new instances
+        /// Static constructor, used to instantiate default source provider.
+        /// </summary>
+        static WithExtensions()
+        {
+            InstanceProvider = new DefaultInstanceProvider();
+        }
+
+        /// <summary>
+        /// Instance provider used by the extension
         /// </summary>
         public static IInstanceProvider InstanceProvider
         {
@@ -21,26 +31,105 @@ namespace With
         }
 
         /// <summary>
-        /// Copy and update extension, used to create a copy of an instance with one field/property updated.
-        /// Designed to work on immutable classes with a single constructor.
-        /// Names of the constructor's parameters must match names of corresponding public fields/properties (case is ignored).
+        /// Copy and update extension.
         /// </summary>
-        /// <typeparam name="TType">Type of the class to 'copy and update'</typeparam>
-        /// <typeparam name="TField">Type of the field/property to update</typeparam>
-        /// <param name="me">Instance to copy and update</param>
+        /// <typeparam name="TSource">Type of the object to 'copy and update'</typeparam>
+        /// <typeparam name="TMember">Type of the field/property to update</typeparam>
+        /// <param name="source">Object to copy and update</param>
         /// <param name="selector">Selector on the field/property to update</param>
         /// <param name="value">New value for the field/property</param>
-        /// <returns>Copied instance, with updated field/property</returns>
-        public static TType With<TType, TField>(this TType me, Expression<Func<TType, TField>> selector, TField value) 
-            where TType : class
+        /// <returns>Query used to create the new desired object</returns>
+        public static ICopyUpdateQuery<TSource> With<TSource, TMember>(this TSource source, Expression<Func<TSource, TMember>> selector, TMember value)
+            where TSource : class
         {
-            var typeToBuild = typeof(TType);
+            // Get field/property name accessed by the selector
+            var memberName = GetMemberName(selector);
+            
+            // Create query
+            return new SingleCopyUpdateQuery<TSource>(
+                source, 
+                KeyValuePair.Create(memberName, (object)value));
+        }
 
-            // Check if unique constructor is available
-            var ctors = typeToBuild.GetConstructors();
+        /// <summary>
+        /// Copy and update extension, used to allow chaining.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the object to 'copy and update'</typeparam>
+        /// <typeparam name="TMember">Type of the field/property to update</typeparam>
+        /// <param name="query">Current query to update</param>
+        /// <param name="selector">Selector on the field/property to update</param>
+        /// <param name="value">New value for the field/property</param>
+        /// <returns>Query used to create the new desired object</returns>
+        public static ICopyUpdateQuery<TSource> With<TSource, TMember>(this ICopyUpdateQuery<TSource> query, Expression<Func<TSource, TMember>> selector, TMember value)
+            where TSource : class
+        {
+            // Get field/property name accessed by the selector
+            var memberName = GetMemberName(selector);
+
+            // Create query
+            return new CopyUpdateQuery<TSource>(
+                query.Source,
+                query.MemberValues.Concat(KeyValuePair.Create(memberName, (object)value)));
+        }
+
+        /// <summary>
+        /// Copy and update an object.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the object to 'copy and update'</typeparam>
+        /// <param name="query">Query to execute</param>
+        /// <returns>New object, with updated values</returns>
+        public static TSource Create<TSource>(this ICopyUpdateQuery<TSource> query)
+            where TSource : class
+        {
+          var typeToBuild = typeof(TSource);
+
+          // Check if unique constructor is available
+          var ctors = typeToBuild.GetConstructors();
             if (1 != ctors.Length)
-                throw new InvalidOperationException("Type " + typeToBuild + " must only contain one constructor");
+              throw new InvalidOperationException("Type " + typeToBuild + " must only contain one constructor");
 
+          // Get constructor parameters
+          var ctor = ctors[0];
+          var ctorParams = ctor.GetParameters();
+
+          // Get arguments values
+          var arguments = ctorParams.Select((param, index) =>
+          {
+              // TODO : can be optimized
+              var loweredParamName = param.Name.ToLower(CultureInfo.InvariantCulture);
+              var newValue = query.MemberValues.Where(keyValue => keyValue.Key == loweredParamName).Select(keyValue => keyValue.Value).FirstOrDefault();
+              if (null != newValue)
+                  return newValue;
+
+              // Field ?
+              var fieldInfo = typeToBuild.GetField(param.Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+              if (null != fieldInfo)
+                  return fieldInfo.GetValue(query.Source);
+
+              // Property ?
+              var propertyInfo = typeToBuild.GetProperty(param.Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+              if (null != propertyInfo)
+                  return propertyInfo.GetValue(query.Source);
+
+              throw new InvalidOperationException(
+                  string.Format(
+                      "Unable to find a value matching constructor's argument named '{0}'",
+                      param.Name));
+          }).ToArray();
+
+          return InstanceProvider.Create<TSource>(arguments);
+        }
+
+        /// <summary>
+        /// Retrieve member name returned by a lambda expression.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the object owning the member</typeparam>
+        /// <typeparam name="TMember">Type of the member</typeparam>
+        /// <param name="selector">Lambda expression to inspect</param>
+        /// <returns>Member name returned by the lambda expression</returns>
+        private static string GetMemberName<TSource, TMember>(Expression<Func<TSource, TMember>> selector)
+            where TSource : class
+        {
             // Check if lambda is valid
             var memberExpression = selector.Body as MemberExpression;
             if (null == memberExpression)
@@ -56,41 +145,15 @@ namespace With
                     string.Format(
                         "Lambda '{0}' is not a field/property access",
                         selector.Name));
-            
+
             // Check if field/property is accessed from lambda parameter
             if (selector.Parameters[0] != memberExpression.Expression)
                 throw new ArgumentException(
                     string.Format(
-                        "Field/property not accessed from instance '{0}'",
+                        "Field/property not accessed from source '{0}'",
                         selector.Parameters[0].Name));
 
-            // Get constructor parameters
-            var ctor = ctors[0];
-            var ctorParams = ctor.GetParameters();
-            
-            // Get arguments values
-            var arguments = ctorParams.Select((param, index) =>
-            {
-                if (param.Name.ToLower(CultureInfo.InvariantCulture) == memberExpression.Member.Name.ToLower(CultureInfo.InvariantCulture))
-                    return value;
-
-                // Field ?
-                var fieldInfo = typeToBuild.GetField(param.Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
-                if (null != fieldInfo)
-                    return fieldInfo.GetValue(me);
-                
-                // Property ?
-                var propertyInfo = typeToBuild.GetProperty(param.Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
-                if (null != propertyInfo)
-                    return propertyInfo.GetValue(me);
-
-                throw new InvalidOperationException(
-                    string.Format(
-                        "Unable to find a value matching constructor's argument '{0}'", 
-                        param.Name));
-            }).ToArray();
-
-            return InstanceProvider.Create<TType>(arguments);
+            return memberExpression.Member.Name.ToLower(CultureInfo.InvariantCulture);
         }
     }
 }
