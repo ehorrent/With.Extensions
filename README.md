@@ -22,8 +22,8 @@ Calling _With_ will cause all future method calls to return wrapped query object
                          .Create();  
 
     Debug.Assert(
-    	updated.Item1 == "new first value" &&
-    	updated.Item2 == "new second value" &&
+      updated.Item1 == "new first value" &&
+      updated.Item2 == "new second value" &&
       updated.Item3 == initial.Item3);
 ```
 ### How does it work ?
