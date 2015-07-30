@@ -27,34 +27,34 @@
 <h3>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
 
-<div class="highlight highlight-C#"><pre>    <span class="pl-k">var</span> source = Tuple.Create(<span class="pl-s"><span class="pl-pds">"</span>first value<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>second value<span class="pl-pds">"</span></span>);
+<div class="highlight highlight-C#"><pre>  <span class="pl-k">var</span> source = Tuple.Create(<span class="pl-s"><span class="pl-pds">"</span>first value<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>second value<span class="pl-pds">"</span></span>);
 
-    <span class="pl-c">// Copy and update 'Item2' member</span>
-    <span class="pl-k">var</span> updated = source.With(obj =&gt; obj.Item1, <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span>)
-                        .Create();  
+  <span class="pl-c">// Copy and update 'Item1' member</span>
+  <span class="pl-k">var</span> updated = source.With(obj =&gt; obj.Item1, <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span>)
+                      .Create();  
 
-    Debug.Assert(
-        updated.Item1 == <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span> &amp;&amp;
-        updated.Item2 == obj.SecondField);</pre></div>
+  System.Diagnostics.Debug.Assert(
+    updated.Item1 == <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span> &amp;&amp;
+    updated.Item2 == obj.SecondField);</pre></div>
 
 <h3>
 <a id="chaining" class="anchor" href="#chaining" aria-hidden="true"><span class="octicon octicon-link"></span></a>Chaining</h3>
 
-<p>Calling <strong><em>With</em></strong> will cause all future method calls to return wrapped query objects. When you've finished, call <strong><em>Create()</em></strong> to get the final value.</p>
+<p>Calling <strong><em>With extension</em></strong> will cause all future method calls to return wrapped query objects. When you've finished, call <strong><em>Create()</em></strong> to get the final value.</p>
 
-<div class="highlight highlight-C#"><pre>    <span class="pl-k">var</span> source = Tuple.Create(<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>);
+<div class="highlight highlight-C#"><pre>  <span class="pl-k">var</span> source = Tuple.Create(<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>);
 
-    <span class="pl-c">// Only create a query object</span>
-    <span class="pl-k">var</span> query = source.With(obj =&gt; obj.Item1, <span class="pl-c1">2</span>)
-                      .With(obj =&gt; obj.Item2, <span class="pl-s"><span class="pl-pds">"</span>new second value<span class="pl-pds">"</span></span>);
+  <span class="pl-c">// Only create a query object</span>
+  <span class="pl-k">var</span> query = source.With(obj =&gt; obj.Item1, <span class="pl-c1">2</span>)
+                    .With(obj =&gt; obj.Item2, <span class="pl-c1">4</span>);
 
-    <span class="pl-c">// Execute the query to create a new object</span>
-    <span class="pl-k">var</span> updated = query.Create();  
+  <span class="pl-c">// Execute the query to create a new object</span>
+  <span class="pl-k">var</span> updated = query.Create();
 
-    Debug.Assert(
-      updated.Item1 == <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span> &amp;&amp;
-      updated.Item2 == <span class="pl-s"><span class="pl-pds">"</span>new second value<span class="pl-pds">"</span></span> &amp;&amp;
-      updated.Item3 == initial.Item3);</pre></div>
+  System.Diagnostics.Debug.Assert(
+    updated.Item1 == <span class="pl-c1">2</span> &amp;&amp;
+    updated.Item2 == <span class="pl-c1">4</span> &amp;&amp;
+    updated.Item3 == <span class="pl-c1">3</span>);</pre></div>
 
 <h3>
 <a id="how-does-it-work-" class="anchor" href="#how-does-it-work-" aria-hidden="true"><span class="octicon octicon-link"></span></a>How does it work ?</h3>
@@ -64,24 +64,24 @@ All is based on naming conventions : <strong>parameter name must match the name 
 
 <p>For example, the class below won't work with the extension, because there's no matching fields/properties for <em>firstField and secondField</em> parameters :</p>
 
-<div class="highlight highlight-C#"><pre>    <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">Immutable</span>
+<div class="highlight highlight-C#"><pre>  <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">Immutable</span>
+  {
+    <span class="pl-k">public</span> <span class="pl-k">readonly</span> <span class="pl-k">string</span> m_FirstField;
+    <span class="pl-k">public</span> <span class="pl-k">readonly</span> <span class="pl-k">string</span> m_SecondField;
+    <span class="pl-k">public</span> <span class="pl-en">Immutable</span>(<span class="pl-k">string</span> <span class="pl-smi">firstField</span>, <span class="pl-k">string</span> <span class="pl-smi">secondField</span>)
     {
-        <span class="pl-k">public</span> <span class="pl-k">readonly</span> <span class="pl-k">string</span> m_FirstField;
-        <span class="pl-k">public</span> <span class="pl-k">readonly</span> <span class="pl-k">string</span> m_SecondField;
-        <span class="pl-k">public</span> <span class="pl-en">Immutable</span>(<span class="pl-k">string</span> <span class="pl-smi">firstField</span>, <span class="pl-k">string</span> <span class="pl-smi">secondField</span>)
-        {
-            <span class="pl-c1">this</span>.m_FirstField = firstField;
-            <span class="pl-c1">this</span>.m_SecondField = secondField;
-        }
+      <span class="pl-c1">this</span>.m_FirstField = firstField;
+      <span class="pl-c1">this</span>.m_SecondField = secondField;
     }
+  }
 
-    ...
+  ...
 
-    <span class="pl-k">var</span> instance = <span class="pl-k">new</span> Immutable(<span class="pl-s"><span class="pl-pds">"</span>first value<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>second value<span class="pl-pds">"</span></span>);
+  <span class="pl-k">var</span> instance = <span class="pl-k">new</span> Immutable(<span class="pl-s"><span class="pl-pds">"</span>first value<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>second value<span class="pl-pds">"</span></span>);
 
-    <span class="pl-c">// 'Create()' call will throw an exception</span>
-    instance.With(obj =&gt; obj.m_FirstField, <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span>)
-            .Create();</pre></div>
+  <span class="pl-c">// 'Create()' call will throw an exception</span>
+  instance.With(obj =&gt; obj.m_FirstField, <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span>)
+          .Create();</pre></div>
 
 <h3>
 <a id="download" class="anchor" href="#download" aria-hidden="true"><span class="octicon octicon-link"></span></a>Download</h3>
