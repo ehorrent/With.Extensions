@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("With.Extensions")]
-[assembly: AssemblyDescription("Extension methods used to copy and update immutable classes.")]
+[assembly: AssemblyDescription("Extension methods used to copy and update immutable classes (as copy and update record expression in F#).")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Emmanuel Horrent")]
 [assembly: AssemblyProduct("With.Extensions")]

@@ -3,23 +3,29 @@ With.Extensions
 
 Extension methods used to copy and update immutable classes (as [_copy and update record expression_](https://msdn.microsoft.com/en-us/library/dd233184.aspx) in F#).
 
-### Example
+### Usage
 ```C#
-    var initial = Tuple.Create("first value", "second value");
-    var updated = initial.With(obj => obj.Item1, "new first value")
-                         .Create();  
+    var source = Tuple.Create("first value", "second value");
+
+    // Copy and update 'Item2' member
+    var updated = source.With(obj => obj.Item1, "new first value")
+                        .Create();  
 
     Debug.Assert(
-    	obj2.Item1 == "new first value" &&
-    	obj2.Item2 == obj.SecondField);
+    	updated.Item1 == "new first value" &&
+    	updated.Item2 == obj.SecondField);
 ```
 ### Chaining
 Calling _With_ will cause all future method calls to return wrapped query objects. When you've finished, call Create() to get the final value.
 ```C#
-    var initial = Tuple.Create("first value", "second value", "third value");
-    var updated = initial.With(obj => obj.Item1, "new first value")
-                         .With(obj => obj.Item2, "new second value")
-                         .Create();  
+    var source = Tuple.Create(1, 2, 3);
+
+    // Only create a query object (does nothing except checking if lambda expression is valid)
+    var query = source.With(obj => obj.Item1, 2)
+                      .With(obj => obj.Item2, "new second value");
+
+    // Execute the query to create a new object
+    var updated = query.Create();  
 
     Debug.Assert(
       updated.Item1 == "new first value" &&
@@ -27,9 +33,10 @@ Calling _With_ will cause all future method calls to return wrapped query object
       updated.Item3 == initial.Item3);
 ```
 ### How does it work ?
-For a given immutable class, the extension search for actual values to use as parameters in the constructor (by using parameter's name). All is based on naming conventions : **parameter name must match the name of a field/property** (case is ignored).
+For a given immutable class, the extension search for actual values to use as parameters in the constructor (by using parameter's name).
+All is based on naming conventions : **parameter name must match the name of a field/property** (case is ignored).
 
-For example, the class below won't work with the extension, because there's not matching fields/properties for _firstField and secondField_ parameters :
+For example, the class below won't work with the extension, because there's no matching fields/properties for _firstField and secondField_ parameters :
 ```C#
     public class Immutable
     {
@@ -41,10 +48,15 @@ For example, the class below won't work with the extension, because there's not 
             this.m_SecondField = secondField;
         }
     }
-```
-_Create()_ call will throw an exception :
-```C#
+
+    ...
+
     var instance = new Immutable("first value", "second value");
+
+    // 'Create()' call will throw an exception
     instance.With(obj => obj.m_FirstField, "new first value")
             .Create();
 ```
+
+### NuGet
+NuGet package can be downloaded [here](https://www.nuget.org/packages/With.Extensions).
