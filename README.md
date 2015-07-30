@@ -16,11 +16,11 @@ Extension methods used to copy and update immutable classes (as [_copy and updat
     	updated.Item2 == obj.SecondField);
 ```
 ### Chaining
-Calling _With_ will cause all future method calls to return wrapped query objects. When you've finished, call Create() to get the final value.
+Calling **_With_** will cause all future method calls to return wrapped query objects. When you've finished, call **_Create()_** to get the final value.
 ```C#
     var source = Tuple.Create(1, 2, 3);
 
-    // Only create a query object (does nothing except checking if lambda expression is valid)
+    // Only create a query object
     var query = source.With(obj => obj.Item1, 2)
                       .With(obj => obj.Item2, "new second value");
 
@@ -58,5 +58,5 @@ For example, the class below won't work with the extension, because there's no m
             .Create();
 ```
 
-### NuGet
+### Download
 NuGet package can be downloaded [here](https://www.nuget.org/packages/With.Extensions).
