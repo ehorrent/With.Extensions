@@ -42,7 +42,9 @@ For example, the class below won't work with the extension, because there's not 
         }
     }
 ```
+_Create()_ call will throw an exception :
 ```C#
     var instance = new Immutable("first value", "second value");
-    instance.With(obj => obj.m_FirstField, "new first value");
+    instance.With(obj => obj.m_FirstField, "new first value")
+            .Create();
 ```
