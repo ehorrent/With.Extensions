@@ -8,6 +8,7 @@
         <owners>$author$</owners>
         <description>$description$</description>
         <projectUrl>https://github.com/ehorrent/With.Extensions</projectUrl>
+        <licenseUrl>https://github.com/ehorrent/With.Extensions/LICENSE.md</licenseUrl>
         <language>en-US</language>
     </metadata>
 </package>
