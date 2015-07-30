@@ -8,7 +8,8 @@
         <owners>$author$</owners>
         <description>$description$</description>
         <projectUrl>https://github.com/ehorrent/With.Extensions</projectUrl>
-        <licenseUrl>https://github.com/ehorrent/With.Extensions/LICENSE.md</licenseUrl>
-        <language>en-US</language>
+        <licenseUrl>https://raw.githubusercontent.com/ehorrent/With.Extensions/master/LICENSE.md</licenseUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <tags>Immutable With Extension</tags>
     </metadata>
 </package>
