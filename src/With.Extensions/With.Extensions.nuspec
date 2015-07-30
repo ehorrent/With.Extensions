@@ -7,7 +7,7 @@
         <authors>$author$</authors>
         <owners>$author$</owners>
         <description>$description$</description>
-        <projectUrl>https://github.com/ehorrent/With.Extensions</projectUrl>
+        <projectUrl>http://ehorrent.github.io/With.Extensions</projectUrl>
         <licenseUrl>https://raw.githubusercontent.com/ehorrent/With.Extensions/master/LICENSE.md</licenseUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <tags>Immutable With Extension</tags>
