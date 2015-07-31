@@ -5,7 +5,7 @@ namespace With.ConstructorProvider
 {
     /// <summary>
     /// Decorator on an IConstructorProvider. 
-    /// Use memory cache to store constructors.
+    /// Use a memory cache to store constructors.
     /// </summary>
     public class CacheConstructorProvider : IConstructorProvider
     {
@@ -20,32 +20,24 @@ namespace With.ConstructorProvider
         private readonly MemoryCache _memoryCache;
 
         /// <summary>
-        /// Cache item expiration dela
+        /// Set of eviction and expiration details of the cache
         /// </summary>
-        private readonly TimeSpan _cacheEntryDelay;
-
-        /// <summary>
-        /// Provides current time
-        /// </summary>
-        private readonly Func<DateTime> _getCurrentTime;
+        private readonly CacheItemPolicy _cacheItemPolicy;
 
         /// <summary>
         /// Create an instance of <see cref="T:CacheConstructorProvider"/> type
         /// </summary>
         /// <param name="instanceProvider">Instance to decorate</param>
         /// <param name="memoryCache">Memory cache used to store constructors</param>
-        /// <param name="cacheEntryDelay">Cache item expiration delay</param>
-        /// <param name="getCurrentTime">Provides current time</param>
-        public CacheConstructorProvider(IConstructorProvider instanceProvider, MemoryCache memoryCache, TimeSpan cacheEntryDelay, Func<DateTime> getCurrentTime)
+        /// <param name="cacheItemPolicy">Set of eviction and expiration details of the cache</param>
+        public CacheConstructorProvider(IConstructorProvider instanceProvider, MemoryCache memoryCache, CacheItemPolicy cacheItemPolicy)
         {
             if (null == instanceProvider) throw new ArgumentNullException("instanceProvider");
             if (null == memoryCache) throw new ArgumentNullException("memoryCache");
-            if (null == getCurrentTime) throw new ArgumentNullException("getCurrentTime");
 
             this._instanceProvider = instanceProvider;
             this._memoryCache = memoryCache;
-            this._cacheEntryDelay = cacheEntryDelay;
-            this._getCurrentTime = getCurrentTime;
+            this._cacheItemPolicy = cacheItemPolicy;
         }
 
         /// <summary>
@@ -61,9 +53,8 @@ namespace With.ConstructorProvider
             if (null != cacheEntry)
                 return (Func<object[], T>)cacheEntry;
 
-            var absoluteExpiration = this._getCurrentTime() + this._cacheEntryDelay;
             var constructor = this._instanceProvider.GetConstructor<T>(constructorSignature);
-            this._memoryCache.Add(cacheKey, constructor, absoluteExpiration);
+            this._memoryCache.Add(cacheKey, constructor, this._cacheItemPolicy);
             return constructor;
         }
     }
