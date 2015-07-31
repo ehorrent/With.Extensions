@@ -43,7 +43,7 @@ namespace With.Tests
         {         
             // Test
             var obj = new Immutable_OtherNamingConvention("First Value", 2D, 3);
-            obj.With(current => current.m_FirstField, "New first Value");
+            obj.With(current => current.m_FirstField, "New first Value").Create();
         }
 
         [Test]
