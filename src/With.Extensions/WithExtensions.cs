@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.Caching;
+using With.ConstructorProvider;
 using With.Helpers;
 using With.Query;
 
@@ -18,7 +20,13 @@ namespace With
         /// </summary>
         static WithExtensions()
         {
-            InstanceProvider = new DefaultInstanceProvider();
+            // For better performances, we put in cache compiled constructors
+            var cacheConstructorProvider = new CacheConstructorProvider(
+                new ExpressionConstructorProvider(),
+                memoryCache: MemoryCache.Default,
+                cacheItemPolicy: new CacheItemPolicy());
+
+            InstanceProvider = new InstanceProviderAdapter(cacheConstructorProvider);
         }
 
         /// <summary>
