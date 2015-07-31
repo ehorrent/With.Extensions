@@ -34,9 +34,13 @@ Calling **_With extension_** will cause all future method calls to return wrappe
 ```
 ### How does it work ?
 For a given immutable class, the extension search for actual values to use as parameters in the constructor (by using parameter's name).
-All is based on naming conventions : **parameter name must match the name of a field/property** (case is ignored).
 
-For example, the class below won't work with the extension, because there's no matching fields/properties for _firstField and secondField_ parameters :
+### Restrictions
+To use the extension, your immutable class must follow this two rules :
+- The class must define a **unique constructor**.
+- Names of constructor's arguments must match the name of a corresponding public field/property (case is ignored).
+
+For example, the class below won't work with the extension, because there's no matching fields/properties for _firstField and secondField_ constructor's parameters :
 ```C#
   public class Immutable
   {
