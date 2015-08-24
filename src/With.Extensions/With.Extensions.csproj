@@ -51,10 +51,7 @@
     <Compile Include="ConstructorProvider\CacheConstructorProvider.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="InstanceProvider\InstanceProviderAdapter.cs" />
-    <Compile Include="InstanceProvider\DefaultInstanceProvider.cs" />
-    <Compile Include="InstanceProvider\IInstanceProvider.cs" />
-    <Compile Include="ConstructorProvider\IConstructorProvider.cs" />
+    <Compile Include="ConstructorProvider\ConstructorProvider.cs" />
     <Compile Include="ConstructorProvider\ExpressionConstructorProvider.cs" />
     <Compile Include="Query\ICopyUpdateQuery.cs" />
     <Compile Include="WithExtensions.cs" />

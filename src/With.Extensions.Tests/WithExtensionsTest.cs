@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using Rhino.Mocks;
+using With.ConstructorProvider;
 using With.Tests.ClassPatterns;
 
 namespace With.Tests
@@ -53,11 +54,7 @@ namespace With.Tests
             const string secondValue = "Second value";
 
             // Setup
-            var stubProvider = MockRepository.GenerateStub<IInstanceProvider>();
-            stubProvider.Stub(x => x.Create<Mutable>(new object[] { newFirstValue, secondValue }))
-                        .Return(new Mutable(newFirstValue, secondValue));
-
-            WithExtensions.InstanceProvider = stubProvider;
+            WithExtensions.GetConstructor = ctorInfos => args => new Mutable((string)args[0], (string)args[1]);
 
             // Test
             var obj = new Mutable("First Value", secondValue);
@@ -76,11 +73,7 @@ namespace With.Tests
             const int thirdValue = 120;
 
             // Setup
-            var stubProvider = MockRepository.GenerateStub<IInstanceProvider>();
-            stubProvider.Stub(x => x.Create<Immutable>(new object[] { firstValue, newSecondValue, thirdValue }))
-                        .Return(new Immutable(firstValue, newSecondValue, thirdValue));
-
-            WithExtensions.InstanceProvider = stubProvider;
+            WithExtensions.GetConstructor = ctorInfos => args => new Immutable((string)args[0], (DateTime)args[1], (int)args[2]);
 
             // Test
             var obj = new Immutable(firstValue, new DateTime(2000, 1, 1), thirdValue);
@@ -99,11 +92,7 @@ namespace With.Tests
             const int secondValue = 10;
 
             // Setup
-            var stubProvider = MockRepository.GenerateStub<IInstanceProvider>();
-            stubProvider.Stub(x => x.Create<Tuple<string, int>>(new object[] {newFirstValue, secondValue}))
-                        .Return(Tuple.Create(newFirstValue, secondValue));
-            
-            WithExtensions.InstanceProvider = stubProvider;
+            WithExtensions.GetConstructor = ctorInfos => args => Tuple.Create((string)args[0], (int)args[1]);
 
             // Test
             var obj = Tuple.Create("First Value", secondValue);
@@ -122,11 +111,7 @@ namespace With.Tests
             const string newThirdValue = "New third Value";
 
             // Setup
-            var stubProvider = MockRepository.GenerateStub<IInstanceProvider>();
-            stubProvider.Stub(x => x.Create<Tuple<string, int, string>>(new object[] { newFirstValue, secondValue, newThirdValue }))
-                        .Return(Tuple.Create(newFirstValue, secondValue, newThirdValue));
-
-            WithExtensions.InstanceProvider = stubProvider;
+            WithExtensions.GetConstructor = ctorInfos => args => Tuple.Create((string)args[0], (int)args[1], (string)args[2]);
 
             // Test
             var obj = Tuple.Create("First Value", secondValue, "Third value");
@@ -148,12 +133,14 @@ namespace With.Tests
             const string newThirdValue = "New third Value";
 
             // Setup
-            var mockProvider = MockRepository.GenerateMock<IInstanceProvider>();
-            var createArg = new object[] {newFirstValue, secondValue, newThirdValue};
-            mockProvider.Stub(x => x.Create<Tuple<string, int, string>>(createArg))
-                        .Return(Tuple.Create(newFirstValue, secondValue, newThirdValue));
+            int callCount = 0;
+            var mockInstanceProvider = (Constructor)(args =>
+            {
+                callCount++;
+                return null;
+            });
 
-            WithExtensions.InstanceProvider = mockProvider;
+            WithExtensions.GetConstructor = ctorInfos => mockInstanceProvider;
 
             // Test
             var obj = Tuple.Create("First Value", secondValue, "Third value");
@@ -161,10 +148,7 @@ namespace With.Tests
                           .With(o => o.Item3, newThirdValue)
                           .Create();
 
-            mockProvider.AssertWasCalled(
-                provider => provider.Create<Tuple<string, int, string>>(createArg),
-                options => options.Repeat.Times(1)
-            );
+            Assert.AreEqual(1, callCount);
         }
     }
 }

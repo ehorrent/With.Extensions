@@ -20,19 +20,20 @@ namespace With
         /// </summary>
         static WithExtensions()
         {
-            // For better performances, we put in cache compiled constructors
-            var cacheConstructorProvider = new CacheConstructorProvider(
-                new ExpressionConstructorProvider(),
-                memoryCache: MemoryCache.Default,
-                cacheItemPolicy: new CacheItemPolicy());
+            // Default constructor, using pure reflection
+            //// GetConstructor = ctor => ctor.Invoke;
 
-            InstanceProvider = new InstanceProviderAdapter(cacheConstructorProvider);
+            // For better performances, we put in cache compiled constructors
+            GetConstructor = CacheConstructorProvider.New(
+                ExpressionConstructorProvider.CreateConstructor,
+                MemoryCache.Default,
+                new CacheItemPolicy());
         }
 
         /// <summary>
-        /// Instance provider used by the extension
+        /// Constructor provider used by the extension
         /// </summary>
-        public static IInstanceProvider InstanceProvider
+        public static GetConstructor GetConstructor
         {
             get;
             set;
@@ -44,14 +45,14 @@ namespace With
         /// <typeparam name="TSource">Type of the object to 'copy and update'</typeparam>
         /// <typeparam name="TMember">Type of the field/property to update</typeparam>
         /// <param name="source">Object to copy and update</param>
-        /// <param name="selector">Selector on the field/property to update</param>
+        /// <param name="memberSelector">Selector on the field/property to update</param>
         /// <param name="value">New value for the field/property</param>
         /// <returns>Query used to create the new desired object</returns>
-        public static ICopyUpdateQuery<TSource> With<TSource, TMember>(this TSource source, Expression<Func<TSource, TMember>> selector, TMember value)
+        public static ICopyUpdateQuery<TSource> With<TSource, TMember>(this TSource source, Expression<Func<TSource, TMember>> memberSelector, TMember value)
             where TSource : class
         {
             // Get field/property name accessed by the selector
-            var memberName = GetMemberName(selector);
+            var memberName = GetMemberName(memberSelector);
             
             // Create query
             return new SingleCopyUpdateQuery<TSource>(
@@ -65,14 +66,14 @@ namespace With
         /// <typeparam name="TSource">Type of the object to 'copy and update'</typeparam>
         /// <typeparam name="TMember">Type of the field/property to update</typeparam>
         /// <param name="query">Current query to update</param>
-        /// <param name="selector">Selector on the field/property to update</param>
+        /// <param name="memberSelector">Selector on the field/property to update</param>
         /// <param name="value">New value for the field/property</param>
         /// <returns>Query used to create the new desired object</returns>
-        public static ICopyUpdateQuery<TSource> With<TSource, TMember>(this ICopyUpdateQuery<TSource> query, Expression<Func<TSource, TMember>> selector, TMember value)
+        public static ICopyUpdateQuery<TSource> With<TSource, TMember>(this ICopyUpdateQuery<TSource> query, Expression<Func<TSource, TMember>> memberSelector, TMember value)
             where TSource : class
         {
             // Get field/property name accessed by the selector
-            var memberName = GetMemberName(selector);
+            var memberName = GetMemberName(memberSelector);
 
             // Create query
             return new CopyUpdateQuery<TSource>(
@@ -92,13 +93,13 @@ namespace With
           var typeToBuild = typeof(TSource);
 
           // Check if unique constructor is available
-          var ctors = typeToBuild.GetConstructors();
-            if (1 != ctors.Length)
+          var ctorInfos = typeToBuild.GetConstructors();
+            if (1 != ctorInfos.Length)
               throw new InvalidOperationException("Type " + typeToBuild + " must only contain one constructor");
 
           // Get constructor parameters
-          var ctor = ctors[0];
-          var ctorParams = ctor.GetParameters();
+          var ctorInfo = ctorInfos[0];
+          var ctorParams = ctorInfo.GetParameters();
 
           // Get arguments values
           var arguments = ctorParams.Select((param, index) =>
@@ -125,7 +126,8 @@ namespace With
                       param.Name));
           }).ToArray();
 
-          return InstanceProvider.Create<TSource>(arguments);
+          var constructor = GetConstructor(ctorInfo);
+          return (TSource)constructor(arguments);
         }
 
         /// <summary>

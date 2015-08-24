@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -8,24 +7,15 @@ namespace With.ConstructorProvider
     /// <summary>
     /// Constructor provider, using expression trees to create compiled constructors
     /// </summary>
-    public class ExpressionConstructorProvider : IConstructorProvider
+    public static class ExpressionConstructorProvider
     {
         /// <summary>
         /// Provides a constructor, based on the given signature
         /// </summary>
-        /// <typeparam name="T">Type of the instance to be created by the constructor</typeparam>
-        /// <param name="constructorSignature">Constructor's signature</param>
+        /// <param name="ctorInfo">Metadatas used to create the constructor</param>
         /// <returns>Corresponding constructor (if existing)</returns>
-        public Func<object[], T> GetConstructor<T>(Type[] constructorSignature) where T : class
+        public static Constructor CreateConstructor(ConstructorInfo ctorInfo)
         {
-            // Find constructor with matching argument types
-            var ctorInfo = typeof(T).GetConstructor(
-                BindingFlags.Instance | BindingFlags.Public,
-                null,
-                CallingConventions.HasThis,
-                constructorSignature.ToArray(),
-                new ParameterModifier[0]);
-
             // Get arguments
             var argsExpr = Expression.Parameter(typeof(object[]), "arguments");
 
@@ -42,7 +32,7 @@ namespace With.ConstructorProvider
 
             var ctorExpr = Expression.New(ctorInfo, ctorParametersExpr);
 
-            var creatorExpr = Expression.Lambda<Func<object[], T>>(
+            var creatorExpr = Expression.Lambda<Constructor>(
                 ctorExpr,
                 argsExpr);
 
