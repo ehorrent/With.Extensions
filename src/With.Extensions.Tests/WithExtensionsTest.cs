@@ -39,12 +39,21 @@ namespace With.Tests
         }
 
         [Test]
-        [ExpectedException(exceptionType: typeof(InvalidOperationException))]
-        public void With_OtherNamingConvention_Exception()
-        {         
+        public void With_OtherNamingConvention_Ok()
+        {
+            const string newFirstValue = "New first Value";
+
+            // Setup
+            WithExtensions.GetConstructor = ctorInfos => args => new Immutable_OtherNamingConvention((string)args[0], (double)args[1], (int)args[2]);
+
             // Test
             var obj = new Immutable_OtherNamingConvention("First Value", 2D, 3);
-            obj.With(current => current.m_FirstField, "New first Value").Create();
+            var obj2 = obj.With(current => current.m_FirstField, newFirstValue).Create(name => string.Concat("m_", Naming.CamelCase.Convert(name)));
+
+            Assert.IsTrue(
+                obj2.m_FirstField == newFirstValue &&
+                obj2.m_SecondField == obj.m_SecondField &&
+                obj2.m_ThirdField == obj.m_ThirdField);
         }
 
         [Test]

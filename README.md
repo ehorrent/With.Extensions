@@ -36,30 +36,34 @@ Calling **_With extension_** will cause all future method calls to return wrappe
 For a given immutable class, the extension search for actual values to use as parameters in the constructor (by using parameter's name).
 
 ### Restrictions
-To use the extension, your immutable class must follow this two rules :
-- The class must define a **unique constructor**.
-- Names of constructor's arguments must match the name of a corresponding public field/property (case is ignored).
+To use the extension, your immutable class must define a **unique constructor**.
 
-For example, the class below won't work with the extension, because there's no matching fields/properties for _firstField and secondField_ constructor's parameters :
+### Naming conventions
+By default, name of a constructor argument must match the name of a corresponding field/property (using **camel case convention**). For example, if a constructor argument is named 'value', extension will search for a field/property named 'Value'.
+
+When calling **Create**, you can override default behavior by providing your own name converter.
+For example, if you use 'm_' prefixes :
 ```C#
   public class Immutable
   {
     public readonly string m_FirstField;
     public readonly string m_SecondField;
+
     public Immutable(string firstField, string secondField)
     {
       this.m_FirstField = firstField;
       this.m_SecondField = secondField;
     }
+
+    ...
   }
 
   ...
 
   var instance = new Immutable("first value", "second value");
 
-  // 'Create()' call will throw an exception
-  instance.With(obj => obj.m_FirstField, "new first value")
-          .Create();
+  var updated = instance.With(obj => obj.m_FirstField, "new first value")
+                        .Create(name => string.Concat("m_", Naming.CamelCase.Convert(name)));
 ```
 
 ### Download
