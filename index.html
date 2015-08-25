@@ -5,7 +5,7 @@
     <title>With.Extensions by ehorrent</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
@@ -64,19 +64,21 @@
 <h3>
 <a id="restrictions" class="anchor" href="#restrictions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Restrictions</h3>
 
-<p>To use the extension, your immutable class must follow this two rules :</p>
+<p>To use the extension, your immutable class must define a <strong>unique constructor</strong>.</p>
 
-<ul>
-<li>The class must define a <strong>unique constructor</strong>.</li>
-<li>Names of constructor's arguments must match the name of a corresponding public field/property (case is ignored).</li>
-</ul>
+<h3>
+<a id="naming-conventions" class="anchor" href="#naming-conventions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Naming conventions</h3>
 
-<p>For example, the class below won't work with the extension, because there's no matching fields/properties for <em>firstField and secondField</em> constructor's parameters :</p>
+<p>By default, name of a constructor argument must match the name of a corresponding field/property (using <strong>camel case convention</strong>). For example, if a constructor argument is named 'value', extension will search for a field/property named 'Value'.</p>
+
+<p>When calling <strong>Create</strong>, you can override default behavior by providing your own name converter.
+For example, if you use 'm_' prefixes :</p>
 
 <div class="highlight highlight-C#"><pre>  <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">Immutable</span>
   {
     <span class="pl-k">public</span> <span class="pl-k">readonly</span> <span class="pl-k">string</span> m_FirstField;
     <span class="pl-k">public</span> <span class="pl-k">readonly</span> <span class="pl-k">string</span> m_SecondField;
+
     <span class="pl-k">public</span> <span class="pl-en">Immutable</span>(<span class="pl-k">string</span> <span class="pl-smi">firstField</span>, <span class="pl-k">string</span> <span class="pl-smi">secondField</span>)
     {
       <span class="pl-c1">this</span>.m_FirstField = firstField;
@@ -87,10 +89,9 @@
   ...
 
   <span class="pl-k">var</span> instance = <span class="pl-k">new</span> Immutable(<span class="pl-s"><span class="pl-pds">"</span>first value<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>second value<span class="pl-pds">"</span></span>);
-
-  <span class="pl-c">// 'Create()' call will throw an exception</span>
-  instance.With(obj =&gt; obj.m_FirstField, <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span>)
-          .Create();</pre></div>
+  <span class="pl-k">var</span> updated = instance.With(obj =&gt; obj.m_FirstField, <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span>)
+                        .Create(name =&gt;
+                          <span class="pl-k">string</span>.Concat(<span class="pl-s"><span class="pl-pds">"</span>m_<span class="pl-pds">"</span></span>, Naming.CamelCase.Convert(name)));</pre></div>
 
 <h3>
 <a id="download" class="anchor" href="#download" aria-hidden="true"><span class="octicon octicon-link"></span></a>Download</h3>
@@ -108,4 +109,3 @@
   
   </body>
 </html>
-
