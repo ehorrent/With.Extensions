@@ -54,16 +54,14 @@ For example, if you use 'm_' prefixes :
       this.m_FirstField = firstField;
       this.m_SecondField = secondField;
     }
-
-    ...
   }
 
   ...
 
   var instance = new Immutable("first value", "second value");
-
   var updated = instance.With(obj => obj.m_FirstField, "new first value")
-                        .Create(name => string.Concat("m_", Naming.CamelCase.Convert(name)));
+                        .Create(name =>
+                          string.Concat("m_", Naming.CamelCase.Convert(name)));
 ```
 
 ### Download
