@@ -16,7 +16,7 @@ namespace With
     public static class WithExtensions
     {
         /// <summary>
-        /// Static constructor, used to instantiate default source provider.
+        /// Static constructor, used to instantiate default constructor provider.
         /// </summary>
         static WithExtensions()
         {

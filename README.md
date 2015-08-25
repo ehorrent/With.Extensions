@@ -11,7 +11,7 @@ Extension methods used to copy and update immutable classes (as [_copy and updat
   var updated = source.With(obj => obj.Item1, "new first value")
                       .Create();  
 
-  System.Diagnostics.Debug.Assert(
+  Debug.Assert(
   	updated.Item1 == "new first value" &&
   	updated.Item2 == obj.SecondField);
 ```
@@ -27,7 +27,7 @@ Calling **_With extension_** will cause all future method calls to return wrappe
   // Execute the query to create a new object
   var updated = query.Create();
 
-  System.Diagnostics.Debug.Assert(
+  Debug.Assert(
     updated.Item1 == 2 &&
     updated.Item2 == 4 &&
     updated.Item3 == 3);
