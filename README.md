@@ -4,11 +4,11 @@ With.Extensions
 Extension methods used to copy and update immutable classes (as [_copy and update record expression_](https://msdn.microsoft.com/en-us/library/dd233184.aspx) in F#).
 
 ### Why ?
-When using immutables classes with C#, it becomes really annoying to copy and update an objects. To do that, you have 2 choices :
+When using immutables classes with C#, it becomes really annoying to copy and update an object. To do that, you have 2 choices :
 - use the constructor
 - create manually copy methods to duplicate your object
 
-The second solution makes your code more readable but it needs to create methods for each field in your class you want to modify, and it can be a lot of work...
+The second solution makes your code more readable but you have to create methods for each field you want to modify in your class , and it can be a lot of work...
 
 This project has been created to supply extensions to duplicate easily your immutable classes.
 
