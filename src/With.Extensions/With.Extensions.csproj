@@ -47,7 +47,7 @@
   <ItemGroup>
     <Compile Include="Helpers\KeyValuePair.cs" />
     <Compile Include="Helpers\Enumerable.cs" />
-    <Compile Include="Naming\CamelCase.cs" />
+    <Compile Include="Naming\PascalCase.cs" />
     <Compile Include="Query\SingleCopyUpdateQuery.cs" />
     <Compile Include="Query\CopyUpdateQuery.cs" />
     <Compile Include="ConstructorProvider\CacheConstructorProvider.cs">

@@ -48,7 +48,7 @@ namespace With.Tests
 
             // Test
             var obj = new Immutable_OtherNamingConvention("First Value", 2D, 3);
-            var obj2 = obj.With(current => current.m_FirstField, newFirstValue).Create(name => string.Concat("m_", Naming.CamelCase.Convert(name)));
+            var obj2 = obj.With(current => current.m_FirstField, newFirstValue).Create(name => string.Concat("m_", Naming.PascalCase.Convert(name)));
 
             Assert.IsTrue(
                 obj2.m_FirstField == newFirstValue &&

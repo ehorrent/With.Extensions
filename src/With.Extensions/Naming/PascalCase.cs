@@ -3,15 +3,15 @@
 namespace With.Naming
 {
     /// <summary>
-    /// Camel case conventions
+    /// Pascal case conventions
     /// </summary>
-    public static class CamelCase
+    public static class PascalCase
     {
         /// <summary>
         /// Rough version converting first character to capital letter.
         /// </summary>
         /// <param name="value">Value to convert</param>
-        /// <returns>Corresponding camel case value</returns>
+        /// <returns>Corresponding pascal case value</returns>
         public static string Convert(string value)
         {
             var builder = new StringBuilder(value);

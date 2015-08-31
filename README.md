@@ -39,7 +39,7 @@ For a given immutable class, the extension search for actual values to use as pa
 To use the extension, your immutable class must define a **unique constructor**.
 
 ### Naming conventions
-By default, name of a constructor argument must match the name of a corresponding field/property (using **camel case convention**). For example, if a constructor argument is named 'value', extension will search for a field/property named 'Value'.
+By default, name of a constructor argument must match the name of a corresponding field/property (using **pascal case convention**). For example, if a constructor argument is named 'value', extension will search for a field/property named 'Value'.
 
 When calling **Create**, you can override default behavior by providing your own name converter.
 For example, if you use 'm_' prefixes :

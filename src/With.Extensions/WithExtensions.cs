@@ -91,14 +91,14 @@ namespace With
         /// <param name="query">Query to execute</param>
         /// <param name="getMemberNameFromArgument">
         /// Returns the member name corresponding to a given argument name.
-        /// If not specified, camel case convention is used.
+        /// If not specified, pascal case convention is used.
         /// Only useful if you use a different naming convention for your members ('m_' prefix for example)
         /// </param>
         /// <returns>New object, with updated values</returns>
         public static TSource Create<TSource>(this ICopyUpdateQuery<TSource> query, Func<string, string> getMemberNameFromArgument = null)
             where TSource : class
         {
-            getMemberNameFromArgument = getMemberNameFromArgument ?? CamelCase.Convert;
+            getMemberNameFromArgument = getMemberNameFromArgument ?? PascalCase.Convert;
 
             var typeToBuild = typeof(TSource);
 
