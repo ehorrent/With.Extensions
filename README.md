@@ -4,13 +4,13 @@ With.Extensions
 Extension methods used to copy and update immutable classes (as [_copy and update record expression_](https://msdn.microsoft.com/en-us/library/dd233184.aspx) in F#).
 
 ### Why ?
-When using immutables classes with C#, it becomes really annoying to copy and update an object. To do that, you have 2 choices :
-- use the constructor
+When using immutables classes with **C#**, it becomes really annoying to copy and update an object. To do that, you have 2 choices :
+- use the constructor (verbose and add 'noise' on what you really want to do)
 - create manually copy methods to duplicate your object
 
 The second solution makes your code more readable but you have to create methods for each field you want to modify in your class , and it can be a lot of work...
 
-This project has been created to supply extensions to duplicate easily your immutable classes.
+This project has been created to supply extensions to **duplicate easily your immutable classes in C#** (of course if you have the choice, you should use [F#](http://fsharp.org/)...)
 
 ### Usage
 ```C#
@@ -48,10 +48,10 @@ For a given immutable class, the extension search for actual values to use as pa
 To use the extension, your immutable class must define a **unique constructor**.
 
 ### Naming conventions
-By default, name of a constructor argument must match the name of a corresponding field/property (using **pascal case convention**). For example, if a constructor argument is named 'value', extension will search for a field/property named 'Value'.
+By default, name of a constructor argument must match the name of a corresponding field/property (using **pascal case convention**). For example, if a constructor argument is named 'defaultValue', extension will search for a field/property named 'DefaultValue'.
 
 When calling **Create**, you can override default behavior by providing your own name converter.
-For example, if you use 'm_' prefixes :
+For example, if you use 'm_' prefixes like below :
 ```C#
   public class Immutable
   {
@@ -70,7 +70,7 @@ For example, if you use 'm_' prefixes :
   var instance = new Immutable("first value", "second value");
   var updated = instance.With(obj => obj.m_FirstField, "new first value")
                         .Create(name =>
-                          string.Concat("m_", Naming.CamelCase.Convert(name)));
+                          string.Concat("m_", Naming.PascalCase.Convert(name)));
 ```
 
 ### Download
