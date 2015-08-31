@@ -25,6 +25,20 @@
 <p>Extension methods used to copy and update immutable classes (as <a href="https://msdn.microsoft.com/en-us/library/dd233184.aspx"><em>copy and update record expression</em></a> in F#).</p>
 
 <h3>
+<a id="why-" class="anchor" href="#why-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why ?</h3>
+
+<p>When using immutables classes with <strong>C#</strong>, it becomes really annoying to copy and update an object. To do that, you have 2 options :</p>
+
+<ul>
+<li>use the constructor (verbose and add 'noise' on what you really want to do)</li>
+<li>create manually copy methods to duplicate your object</li>
+</ul>
+
+<p>The second solution makes your code more readable but you have to create methods for each field you want to modify in your class, and it can be a lot of work...</p>
+
+<p>This project has been created to supply extensions to <strong>duplicate easily your immutable classes in C#</strong> (of course if you have the choice, you should use <a href="http://fsharp.org/">F#</a>...)</p>
+
+<h3>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
 
 <div class="highlight highlight-C#"><pre>  <span class="pl-k">var</span> source = Tuple.Create(<span class="pl-s"><span class="pl-pds">"</span>first value<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>second value<span class="pl-pds">"</span></span>);
@@ -33,7 +47,7 @@
   <span class="pl-k">var</span> updated = source.With(obj =&gt; obj.Item1, <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span>)
                       .Create();  
 
-  System.Diagnostics.Debug.Assert(
+  Debug.Assert(
     updated.Item1 == <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span> &amp;&amp;
     updated.Item2 == obj.SecondField);</pre></div>
 
@@ -51,7 +65,7 @@
   <span class="pl-c">// Execute the query to create a new object</span>
   <span class="pl-k">var</span> updated = query.Create();
 
-  System.Diagnostics.Debug.Assert(
+  Debug.Assert(
     updated.Item1 == <span class="pl-c1">2</span> &amp;&amp;
     updated.Item2 == <span class="pl-c1">4</span> &amp;&amp;
     updated.Item3 == <span class="pl-c1">3</span>);</pre></div>
@@ -69,10 +83,10 @@
 <h3>
 <a id="naming-conventions" class="anchor" href="#naming-conventions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Naming conventions</h3>
 
-<p>By default, name of a constructor argument must match the name of a corresponding field/property (using <strong>camel case convention</strong>). For example, if a constructor argument is named 'value', extension will search for a field/property named 'Value'.</p>
+<p>By default, name of a constructor argument must match the name of a corresponding field/property (using <strong>pascal case convention</strong>). For example, if a constructor argument is named 'defaultValue', extension will search for a field/property named 'DefaultValue'.</p>
 
 <p>When calling <strong>Create</strong>, you can override default behavior by providing your own name converter.
-For example, if you use 'm_' prefixes :</p>
+For example, if you use 'm_' prefixes like below :</p>
 
 <div class="highlight highlight-C#"><pre>  <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">Immutable</span>
   {
@@ -91,7 +105,7 @@ For example, if you use 'm_' prefixes :</p>
   <span class="pl-k">var</span> instance = <span class="pl-k">new</span> Immutable(<span class="pl-s"><span class="pl-pds">"</span>first value<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>second value<span class="pl-pds">"</span></span>);
   <span class="pl-k">var</span> updated = instance.With(obj =&gt; obj.m_FirstField, <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span>)
                         .Create(name =&gt;
-                          <span class="pl-k">string</span>.Concat(<span class="pl-s"><span class="pl-pds">"</span>m_<span class="pl-pds">"</span></span>, Naming.CamelCase.Convert(name)));</pre></div>
+                          <span class="pl-k">string</span>.Concat(<span class="pl-s"><span class="pl-pds">"</span>m_<span class="pl-pds">"</span></span>, Naming.PascalCase.Convert(name)));</pre></div>
 
 <h3>
 <a id="download" class="anchor" href="#download" aria-hidden="true"><span class="octicon octicon-link"></span></a>Download</h3>
