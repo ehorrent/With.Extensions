@@ -5,7 +5,7 @@ namespace With.Helpers
     /// <summary>
     /// Internal extensions on IEnumerable
     /// </summary>
-    internal static class Enumerable
+    internal static class EnumerableExtension
     {
         /// <summary>
         /// Concatenate an enumeration with a single item

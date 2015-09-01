@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Runtime.Caching;
+using System.Collections.Concurrent;
 
 namespace With.ConstructorProvider
 {
@@ -9,6 +9,8 @@ namespace With.ConstructorProvider
     /// </summary>
     public static class CacheConstructorProvider
     {
+        private static ConcurrentDictionary<string, Constructor> _memoryCache = new ConcurrentDictionary<string, Constructor>();
+
         /// <summary>
         /// Decorates a CreateConstructor to use memory cache.
         /// Cache key is just the name of the new type to create.
@@ -17,24 +19,19 @@ namespace With.ConstructorProvider
         /// <param name="memoryCache">Memory cache used to store created delegates</param>
         /// <param name="cacheItemPolicy">Cache item policy</param>
         /// <returns>New constructor</returns>
-        public static GetConstructor New(
-            GetConstructor getConstructor, 
-            MemoryCache memoryCache, 
-            CacheItemPolicy cacheItemPolicy)
+        public static GetConstructor New(GetConstructor getConstructor)
         {
             if (null == getConstructor) throw new ArgumentNullException("ctorProvider");
-            if (null == memoryCache) throw new ArgumentNullException("memoryCache");
-            if (null == cacheItemPolicy) throw new ArgumentNullException("cacheItemPolicy");
 
             return (ctorInfo) =>
             {
-                var cacheKey = ctorInfo.MemberType.ToString();
-                var cacheEntry = memoryCache.Get(cacheKey);
+                var cacheKey = ctorInfo.DeclaringType.Name;
+                var cacheEntry = _memoryCache[cacheKey];
                 if (null != cacheEntry)
-                    return (Constructor)cacheEntry;
+                    return cacheEntry;
 
                 var constructor = getConstructor(ctorInfo);
-                memoryCache.Add(cacheKey, constructor, cacheItemPolicy);
+                _memoryCache[cacheKey] = constructor;
                 return constructor;
             };
         }

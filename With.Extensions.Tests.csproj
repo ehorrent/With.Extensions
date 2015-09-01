@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FB4BD1C8-11AD-4D9F-A41F-0281D7D7ACF1}</ProjectGuid>
+    <ProjectGuid>{928FD7BB-C89C-4154-A01D-391305C6D46D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>With.Extensions.Tests</RootNamespace>
     <AssemblyName>With.Extensions.Tests</AssemblyName>
@@ -30,7 +30,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="nunit.framework">
-      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <HintPath>packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -38,20 +38,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="ClassPatterns\" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="ClassPatterns\Immutable.cs" />
     <Compile Include="ClassPatterns\Immutable_MultipleCtors.cs" />
     <Compile Include="ClassPatterns\Immutable_OtherNamingconvention.cs" />
     <Compile Include="ClassPatterns\Mutable.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WithExtensionsTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\With.Extensions\With.Extensions.csproj">
-      <Project>{CFE5923D-F84A-44E7-A0B5-01FEDA8894F2}</Project>
-      <Name>With.Extensions</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
 </Project>

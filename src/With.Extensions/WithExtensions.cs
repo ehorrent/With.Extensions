@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.Caching;
 using With.ConstructorProvider;
 using With.Helpers;
 using With.Naming;
 using With.Query;
+using System.Collections.Generic;
 
 namespace With
 {
@@ -21,13 +21,11 @@ namespace With
         static WithExtensions()
         {
             // Default constructor, using pure reflection
-            //// GetConstructor = ctor => ctor.Invoke;
-
+            ////GetConstructor = ctor => ctor.Invoke;
+            
             // For better performances, we put in cache compiled constructors
             GetConstructor = CacheConstructorProvider.New(
-                ExpressionConstructorProvider.CreateConstructor,
-                MemoryCache.Default,
-                new CacheItemPolicy());
+                ExpressionConstructorProvider.CreateConstructor);
         }
 
         /// <summary>
@@ -40,7 +38,7 @@ namespace With
         }
 
         /// <summary>
-        /// Copy and update extension.
+        /// Creates a query to copy and update an object.
         /// </summary>
         /// <typeparam name="TSource">Type of the object to 'copy and update'</typeparam>
         /// <typeparam name="TMember">Type of the field/property to update</typeparam>
@@ -48,7 +46,7 @@ namespace With
         /// <param name="memberSelector">Selector on the field/property to update</param>
         /// <param name="memberValue">New value for the field/property</param>
         /// <returns>Query used to create the new desired object</returns>
-        public static ICopyUpdateQuery<TSource> With<TSource, TMember>(
+        public static CopyUpdateQuery<TSource> With<TSource, TMember>(
             this TSource source, 
             Expression<Func<TSource, TMember>> memberSelector, 
             TMember memberValue)
@@ -56,15 +54,16 @@ namespace With
         {
             // Get field/property name accessed by the selector
             var memberName = GetReturnedMemberName(memberSelector);
+			var emptyList = Enumerable.Empty<KeyValuePair<string, object>>();
             
             // Create query
-            return new SingleCopyUpdateQuery<TSource>(
+            return new CopyUpdateQuery<TSource>(
                 source, 
-                KeyValuePair.Create(memberName, (object)memberValue));
+				emptyList.Concat(KeyValuePair.Create(memberName, (object)memberValue)));
         }
 
         /// <summary>
-        /// Copy and update extension, used to allow chaining.
+        /// Creates a query to copy and update an object.
         /// </summary>
         /// <typeparam name="TSource">Type of the object to 'copy and update'</typeparam>
         /// <typeparam name="TMember">Type of the field/property to update</typeparam>
@@ -72,7 +71,10 @@ namespace With
         /// <param name="memberSelector">Selector on the field/property to update</param>
         /// <param name="memberValue">New value for the field/property</param>
         /// <returns>Query used to create the new desired object</returns>
-        public static ICopyUpdateQuery<TSource> With<TSource, TMember>(this ICopyUpdateQuery<TSource> query, Expression<Func<TSource, TMember>> memberSelector, TMember memberValue)
+        public static CopyUpdateQuery<TSource> With<TSource, TMember>(
+            this CopyUpdateQuery<TSource> query, 
+            Expression<Func<TSource, TMember>> memberSelector, 
+            TMember memberValue)
             where TSource : class
         {
             // Get field/property name accessed by the selector
@@ -85,7 +87,7 @@ namespace With
         }
 
         /// <summary>
-        /// Copy and update an object.
+        /// Execute a query to copy and update an object.
         /// </summary>
         /// <typeparam name="TSource">Type of the object to 'copy and update'</typeparam>
         /// <param name="query">Query to execute</param>
@@ -95,7 +97,7 @@ namespace With
         /// Only useful if you use a different naming convention for your members ('m_' prefix for example)
         /// </param>
         /// <returns>New object, with updated values</returns>
-        public static TSource Create<TSource>(this ICopyUpdateQuery<TSource> query, Func<string, string> getMemberNameFromArgument = null)
+        public static TSource Create<TSource>(this CopyUpdateQuery<TSource> query, Func<string, string> getMemberNameFromArgument = null)
             where TSource : class
         {
             getMemberNameFromArgument = getMemberNameFromArgument ?? PascalCase.Convert;
@@ -103,12 +105,13 @@ namespace With
             var typeToBuild = typeof(TSource);
 
             // Check if unique constructor is available
-            var ctorInfos = typeToBuild.GetConstructors();
-            if (1 != ctorInfos.Length)
+            var typeInfo = typeToBuild.GetTypeInfo();
+            var ctorInfos = typeInfo.DeclaredConstructors;
+            if (1 != ctorInfos.Count())
                 throw new InvalidOperationException("Type " + typeToBuild + " must only contain one constructor");
 
             // Get constructor parameters
-            var ctorInfo = ctorInfos[0];
+            var ctorInfo = ctorInfos.First();
             var ctorParams = ctorInfo.GetParameters();
 
             // Get arguments values
@@ -121,12 +124,12 @@ namespace With
                     return newValue;
 
                 // Field ?
-                var fieldInfo = typeToBuild.GetField(memberName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                var fieldInfo = typeToBuild.GetRuntimeField(memberName);
                 if (null != fieldInfo)
                     return fieldInfo.GetValue(query.Source);
 
                 // Property ?
-                var propertyInfo = typeToBuild.GetProperty(memberName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                var propertyInfo = typeToBuild.GetRuntimeProperty(memberName);
                 if (null != propertyInfo)
                     return propertyInfo.GetValue(query.Source);
 

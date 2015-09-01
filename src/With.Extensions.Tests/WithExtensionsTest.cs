@@ -1,6 +1,5 @@
 ﻿using System;
 using NUnit.Framework;
-using Rhino.Mocks;
 using With.ConstructorProvider;
 using With.Tests.ClassPatterns;
 
