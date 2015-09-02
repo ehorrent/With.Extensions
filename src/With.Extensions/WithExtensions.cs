@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -6,7 +7,6 @@ using With.ConstructorProvider;
 using With.Helpers;
 using With.Naming;
 using With.Query;
-using System.Collections.Generic;
 
 namespace With
 {
@@ -21,7 +21,7 @@ namespace With
         static WithExtensions()
         {
             // Default constructor, using pure reflection
-            ////GetConstructor = ctor => ctor.Invoke;
+            // GetConstructor = ctor => ctor.Invoke;
             
             // For better performances, we put in cache compiled constructors
             GetConstructor = CacheConstructorProvider.New(
@@ -54,12 +54,12 @@ namespace With
         {
             // Get field/property name accessed by the selector
             var memberName = GetReturnedMemberName(memberSelector);
-			var emptyList = Enumerable.Empty<KeyValuePair<string, object>>();
-            
+            var emptyList = Enumerable.Empty<KeyValuePair<string, object>>();
+
             // Create query
             return new CopyUpdateQuery<TSource>(
-                source, 
-				emptyList.Concat(KeyValuePair.Create(memberName, (object)memberValue)));
+                source,
+                emptyList.Concat(KeyValuePair.Create(memberName, (object)memberValue)));
         }
 
         /// <summary>

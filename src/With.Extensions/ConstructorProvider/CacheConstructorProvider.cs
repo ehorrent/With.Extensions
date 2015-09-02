@@ -14,12 +14,10 @@ namespace With.ConstructorProvider
         /// Cache key is just the name of the new type to create.
         /// </summary>
         /// <param name="getConstructor">Delegate to decorate</param>
-        /// <param name="memoryCache">Memory cache used to store created delegates</param>
-        /// <param name="cacheItemPolicy">Cache item policy</param>
         /// <returns>New constructor</returns>
         public static GetConstructor New(GetConstructor getConstructor)
         {
-            if (null == getConstructor) throw new ArgumentNullException("ctorProvider");
+            if (null == getConstructor) throw new ArgumentNullException("getConstructor");
 
             var memoryCache = new ConcurrentDictionary<string, Constructor>();
 
