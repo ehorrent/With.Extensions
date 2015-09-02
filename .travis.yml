@@ -7,4 +7,4 @@ install:
 
 script:
   - xbuild /p:Configuration=Debug With.Extensions.sln
-  - nunit-console ./src/With.Extensions.Tests/bin/Debug/WithExtension.Tests.dll
+  - nunit-console ./src/With.Extensions.Tests/bin/Debug/With.Extensions.Tests.dll
