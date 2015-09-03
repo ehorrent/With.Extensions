@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>With</RootNamespace>
     <AssemblyName>With.Extensions</AssemblyName>
-    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
   </PropertyGroup>
