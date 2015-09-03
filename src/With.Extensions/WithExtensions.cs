@@ -21,11 +21,11 @@ namespace With
         static WithExtensions()
         {
             // Default constructor, using pure reflection
-            // GetConstructor = ctor => ctor.Invoke;
+            GetConstructor = ctor => ctor.Invoke;
             
             // For better performances, we put in cache compiled constructors
-            GetConstructor = CacheConstructorProvider.New(
-                ExpressionConstructorProvider.CreateConstructor);
+            /*GetConstructor = CacheConstructorProvider.New(
+                ExpressionConstructorProvider.CreateConstructor);*/
         }
 
         /// <summary>
