@@ -1,14 +1,8 @@
 language: csharp
 solution: With.Extensions.sln
-
-sudo: false
-
-addons:
-  apt:
-    packages:
-    - nunit-console
 	
 install:
+  - sudo apt-get install nunit-console
   - nuget restore With.Extensions.sln
 
 script:
