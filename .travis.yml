@@ -1,10 +1,10 @@
 language: csharp
 solution: With.Extensions.sln
-	
+
 install:
   - sudo apt-get install nunit-console
   - nuget restore With.Extensions.sln
 
 script:
-  - xbuild /p:Configuration=Release With.Extensions.sln
-  - nunit-console ./src/With.Extensions.Tests/bin/Release/With.Extensions.Tests.dll
+  - xbuild /p:Configuration=Debug With.Extensions.sln
+  - nunit-console ./src/With.Extensions.Tests/bin/Debug/With.Extensions.Tests.dll
