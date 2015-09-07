@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace With.Query
+namespace With
 {
     /// <summary>
     /// Provides informations to create and update an immutable instance

@@ -6,7 +6,6 @@ using System.Reflection;
 using With.ConstructorProvider;
 using With.Helpers;
 using With.Naming;
-using With.Query;
 
 namespace With
 {
@@ -21,17 +20,17 @@ namespace With
         static WithExtensions()
         {
             // Default constructor, using pure reflection
-            GetConstructor = ctor => ctor.Invoke;
-            
+            ////ConstructorProvider = ctor => ctor.Invoke;
+
             // For better performances, we put in cache compiled constructors
-            /*GetConstructor = CacheConstructorProvider.New(
-                ExpressionConstructorProvider.CreateConstructor);*/
+            ConstructorProvider = CacheConstructorProvider.New(
+                                    ExpressionConstructorProvider.CreateConstructor);
         }
 
         /// <summary>
         /// Constructor provider used by the extension
         /// </summary>
-        public static GetConstructor GetConstructor
+        public static Func<ConstructorInfo, Constructor> ConstructorProvider
         {
             get;
             set;
@@ -139,7 +138,7 @@ namespace With
                         arg.Name));
             }).ToArray();
 
-            var constructor = GetConstructor(ctorInfo);
+            var constructor = ConstructorProvider(ctorInfo);
             return (TSource)constructor(arguments);
         }
 

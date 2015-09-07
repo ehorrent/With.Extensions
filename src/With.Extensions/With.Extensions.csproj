@@ -22,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <LangVersion>5</LangVersion>
+    <DocumentationFile>bin\Debug\With.Extensions.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -30,14 +31,15 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <LangVersion>5</LangVersion>
+    <DocumentationFile>bin\Release\With.Extensions.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ConstructorProvider\CacheConstructorProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WithExtensions.cs" />
-    <Compile Include="Query\CopyUpdateQuery.cs" />
+    <Compile Include="CopyUpdateQuery.cs" />
     <Compile Include="Helpers\KeyValuePair.cs" />
-    <Compile Include="ConstructorProvider\ConstructorProvider.cs" />
+    <Compile Include="Constructor.cs" />
     <Compile Include="ConstructorProvider\ExpressionConstructorProvider.cs" />
     <Compile Include="Naming\PascalCase.cs" />
     <Compile Include="Helpers\EnumerableExtension.cs" />

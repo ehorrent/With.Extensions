@@ -43,7 +43,7 @@ namespace With.Tests
             const string newFirstValue = "New first Value";
 
             // Setup
-            WithExtensions.GetConstructor = ctorInfos => args => new Immutable_OtherNamingConvention((string)args[0], (double)args[1], (int)args[2]);
+            WithExtensions.ConstructorProvider = ctorInfos => args => new Immutable_OtherNamingConvention((string)args[0], (double)args[1], (int)args[2]);
 
             // Test
             var obj = new Immutable_OtherNamingConvention("First Value", 2D, 3);
@@ -62,7 +62,7 @@ namespace With.Tests
             const string secondValue = "Second value";
 
             // Setup
-            WithExtensions.GetConstructor = ctorInfos => args => new Mutable((string)args[0], (string)args[1]);
+            WithExtensions.ConstructorProvider = ctorInfos => args => new Mutable((string)args[0], (string)args[1]);
 
             // Test
             var obj = new Mutable("First Value", secondValue);
@@ -81,7 +81,7 @@ namespace With.Tests
             const int thirdValue = 120;
 
             // Setup
-            WithExtensions.GetConstructor = ctorInfos => args => new Immutable((string)args[0], (DateTime)args[1], (int)args[2]);
+            WithExtensions.ConstructorProvider = ctorInfos => args => new Immutable((string)args[0], (DateTime)args[1], (int)args[2]);
 
             // Test
             var obj = new Immutable(firstValue, new DateTime(2000, 1, 1), thirdValue);
@@ -100,7 +100,7 @@ namespace With.Tests
             const int secondValue = 10;
 
             // Setup
-            WithExtensions.GetConstructor = ctorInfos => args => Tuple.Create((string)args[0], (int)args[1]);
+            WithExtensions.ConstructorProvider = ctorInfos => args => Tuple.Create((string)args[0], (int)args[1]);
 
             // Test
             var obj = Tuple.Create("First Value", secondValue);
@@ -119,7 +119,7 @@ namespace With.Tests
             const string newThirdValue = "New third Value";
 
             // Setup
-            WithExtensions.GetConstructor = ctorInfos => args => Tuple.Create((string)args[0], (int)args[1], (string)args[2]);
+            WithExtensions.ConstructorProvider = ctorInfos => args => Tuple.Create((string)args[0], (int)args[1], (string)args[2]);
 
             // Test
             var obj = Tuple.Create("First Value", secondValue, "Third value");
@@ -148,7 +148,7 @@ namespace With.Tests
                 return null;
             });
 
-            WithExtensions.GetConstructor = ctorInfos => mockInstanceProvider;
+            WithExtensions.ConstructorProvider = ctorInfos => mockInstanceProvider;
 
             // Test
             var obj = Tuple.Create("First Value", secondValue, "Third value");
