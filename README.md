@@ -1,3 +1,7 @@
+[![Travis build status](https://travis-ci.org/ehorrent/With.Extensions.svg?branch=master)](https://travis-ci.org/ehorrent/With.Extensions)
+[![AppVeayor build status](https://ci.appveyor.com/api/projects/status/rrj9mjjjyut92qhj?svg=true)](https://ci.appveyor.com/project/ehorrent/with-extensions)
+[![NuGet Status](http://img.shields.io/nuget/v/With.Extensions.svg?style=flat)](https://www.nuget.org/packages/With.Extensions/)
+
 With.Extensions
 ===================
 
