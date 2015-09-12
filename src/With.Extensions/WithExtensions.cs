@@ -15,6 +15,11 @@ namespace With
     public static class WithExtensions
     {
         /// <summary>
+        /// 
+        /// </summary>
+        private static IEnumerable<KeyValuePair<string, object>> EmptyList = Enumerable.Empty<KeyValuePair<string, object>>();
+
+        /// <summary>
         /// Static constructor, used to instantiate default constructor provider.
         /// </summary>
         static WithExtensions()
@@ -53,12 +58,11 @@ namespace With
         {
             // Get field/property name accessed by the selector
             var memberName = GetReturnedMemberName(memberSelector);
-            var emptyList = Enumerable.Empty<KeyValuePair<string, object>>();
 
             // Create query
             return new CopyUpdateQuery<TSource>(
                 source,
-                emptyList.Concat(KeyValuePair.Create(memberName, (object)memberValue)));
+                EmptyList.Concat(KeyValuePair.Create(memberName, (object)memberValue)));
         }
 
         /// <summary>
@@ -113,30 +117,44 @@ namespace With
             var ctorInfo = ctorInfos.First();
             var ctorParams = ctorInfo.GetParameters();
 
-            // Get arguments values
-            var arguments = ctorParams.Select((arg, index) =>
-            {
-                // TODO : can be optimized
-                var memberName = getMemberNameFromArgument(arg.Name);
-                var newValue = query.MemberValues.Where(keyValue => keyValue.Key == memberName).Select(keyValue => keyValue.Value).FirstOrDefault();
-                if (null != newValue)
-                    return newValue;
+            var newValues = query.MemberValues.ToDictionary(keyValue => keyValue.Key, keyValue => keyValue.Value);
 
-                // Field ?
-                var fieldInfo = typeToBuild.GetRuntimeField(memberName);
-                if (null != fieldInfo)
-                    return fieldInfo.GetValue(query.Source);
+            // Get arguments values
+            var arguments = new object[ctorParams.Length];
+            for (int index = 0; index < ctorParams.Length; ++index)
+            {
+                var arg = ctorParams[index];
+                var memberName = getMemberNameFromArgument(arg.Name);
+
+                // New value ?
+                object newValue;
+                if (newValues.TryGetValue(memberName, out newValue))
+                {
+                    arguments[index] = newValue;
+                    continue;
+                }
 
                 // Property ?
                 var propertyInfo = typeToBuild.GetRuntimeProperty(memberName);
                 if (null != propertyInfo)
-                    return propertyInfo.GetValue(query.Source);
+                {
+                    arguments[index] = propertyInfo.GetValue(query.Source);
+                    continue;
+                }
+
+                // Field ?
+                var fieldInfo = typeToBuild.GetRuntimeField(memberName);
+                if (null != fieldInfo)
+                {
+                    arguments[index] = fieldInfo.GetValue(query.Source);
+                    continue;
+                }
 
                 throw new InvalidOperationException(
                     string.Format(
                         "Unable to find a value matching constructor argument named '{0}'",
                         arg.Name));
-            }).ToArray();
+            }
 
             var constructor = ConstructorProvider(ctorInfo);
             return (TSource)constructor(arguments);

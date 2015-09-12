@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 
 namespace With.ConstructorProvider
@@ -21,14 +20,15 @@ namespace With.ConstructorProvider
 
             // Get constructor parameters values
             var ctorParameters = ctorInfo.GetParameters();
-            var ctorParametersExpr = ctorParameters.Select((param, index) =>
+            var ctorParametersExpr = new UnaryExpression[ctorParameters.Length];
+            for (int i=0; i<ctorParameters.Length; ++i)
             {
                 var arrayAccessExpr = Expression.ArrayAccess(
                     argsExpr,
-                    Expression.Constant(index, typeof(int)));
+                    Expression.Constant(i, typeof(int)));
 
-                return Expression.Convert(arrayAccessExpr, param.ParameterType);
-            }).ToArray();
+                ctorParametersExpr[i] = Expression.Convert(arrayAccessExpr, ctorParameters[i].ParameterType);
+            }
 
             var ctorExpr = Expression.New(ctorInfo, ctorParametersExpr);
 
