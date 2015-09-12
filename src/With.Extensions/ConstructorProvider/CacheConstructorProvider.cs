@@ -15,7 +15,7 @@ namespace With.ConstructorProvider
         /// Cache key is just the name of the new type to create.
         /// </summary>
         /// <param name="getConstructor">Delegate to decorate</param>
-        /// <returns>New constructor</returns>
+        /// <returns>New constructor provider</returns>
         public static Func<ConstructorInfo, Constructor> New(Func<ConstructorInfo, Constructor> getConstructor)
         {
             if (null == getConstructor) throw new ArgumentNullException("getConstructor");

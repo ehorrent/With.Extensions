@@ -8,7 +8,7 @@ namespace With.Helpers
     internal static class KeyValuePair
     {
         /// <summary>
-        /// Create helper, just useful if you want use type inference
+        /// Create a new KeyValuePair instance
         /// </summary>
         /// <typeparam name="TKey">The type of the key</typeparam>
         /// <typeparam name="TValue">The type of the value</typeparam>
