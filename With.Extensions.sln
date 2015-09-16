@@ -17,6 +17,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "With.Extensions.Performances", "src\With.Extensions.Performances\With.Extensions.Performances\With.Extensions.Performances.csproj", "{8C68A44B-5D86-45FD-9545-4F919761A10B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{902DCA9D-6429-4E98-A960-EFDC39918A1D}"
+	ProjectSection(SolutionItems) = preProject
+		Performance.psess = Performance.psess
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(Performance) = preSolution

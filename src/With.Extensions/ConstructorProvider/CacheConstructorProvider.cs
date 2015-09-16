@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 
-namespace With.ConstructorProvider
+namespace With
 {
     /// <summary>
     /// Decorator on a constructor provider. 

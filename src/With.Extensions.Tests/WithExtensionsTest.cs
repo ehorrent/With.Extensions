@@ -1,6 +1,5 @@
 ﻿using System;
 using NUnit.Framework;
-using With.ConstructorProvider;
 using With.Tests.ClassPatterns;
 
 namespace With.Tests

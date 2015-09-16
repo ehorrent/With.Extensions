@@ -3,43 +3,76 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using With.ConstructorProvider;
 using With.Helpers;
 using With.Naming;
 
 namespace With
 {
     /// <summary>
+    /// Create a new instance, using specified constructor's arguments
+    /// </summary>
+    /// <param name="arguments">Ordered constructor's arguments</param>
+    /// <returns>New instance</returns>
+    public delegate object Constructor(object[] arguments);
+
+    /// <summary>
+    /// Returns the property/field value of the specified object
+    /// </summary>
+    /// <param name="obj">The object whose property/field value will be returned</param>
+    /// <param name="memberName">The name of the property/field</param>
+    /// <returns>The property/field value of the specified object</returns>
+    public delegate object MemberValueProvider(object obj, string memberName);
+
+    /// <summary>
     /// Provides 'With' method on all classes
     /// </summary>
     public static class WithExtensions
     {
         /// <summary>
-        /// 
+        /// Empty list of KeyValuePair elements
         /// </summary>
-        private static IEnumerable<KeyValuePair<string, object>> EmptyList = Enumerable.Empty<KeyValuePair<string, object>>();
+        private static readonly IEnumerable<KeyValuePair<string, object>> EmptyList = Enumerable.Empty<KeyValuePair<string, object>>();
 
         /// <summary>
         /// Static constructor, used to instantiate default constructor provider.
         /// </summary>
         static WithExtensions()
         {
-            // Default constructor, using pure reflection
+            // Default constructor provider, using pure reflection
             ////ConstructorProvider = ctor => ctor.Invoke;
 
             // For better performances, we put in cache compiled constructors
             ConstructorProvider = CacheConstructorProvider.New(
                                     ExpressionConstructorProvider.CreateConstructor);
+
+            GetMemberValueProvider = typeInfo => (obj, memberName) =>
+            {
+                // Property ?
+                var propertyInfo = typeInfo.GetDeclaredProperty(memberName);
+                if (null != propertyInfo)
+                    return propertyInfo.GetValue(obj);
+
+                // Field ?
+                var fieldInfo = typeInfo.GetDeclaredField(memberName);
+                if (null != fieldInfo)
+                    return fieldInfo.GetValue(obj);
+
+                throw new InvalidOperationException(
+                    string.Format(
+                        "Unable to find a field/property value for '{0}'",
+                        memberName));
+            };
         }
 
         /// <summary>
-        /// Constructor provider used by the extension
+        /// Provides constructors used to create new objects
         /// </summary>
-        public static Func<ConstructorInfo, Constructor> ConstructorProvider
-        {
-            get;
-            set;
-        }
+        public static Func<ConstructorInfo, Constructor> ConstructorProvider { get; set; }
+
+        /// <summary>
+        /// Provides methods used to retrieve field/property values of a specified object
+        /// </summary>
+        public static Func<TypeInfo, MemberValueProvider> GetMemberValueProvider { get; set; }
 
         /// <summary>
         /// Creates a query to copy and update an object.
@@ -95,7 +128,7 @@ namespace With
         /// <typeparam name="TSource">Type of the object to 'copy and update'</typeparam>
         /// <param name="query">Query to execute</param>
         /// <param name="getMemberNameFromArgument">
-        /// Returns the member name corresponding to a given argument name.
+        /// Returns the member name corresponding to a specified argument name.
         /// If not specified, pascal case convention is used.
         /// Only useful if you use a different naming convention for your members ('m_' prefix for example)
         /// </param>
@@ -117,7 +150,7 @@ namespace With
             var ctorInfo = ctorInfos.First();
             var ctorParams = ctorInfo.GetParameters();
 
-            var newValues = query.MemberValues.ToDictionary(keyValue => keyValue.Key, keyValue => keyValue.Value);
+            var updatedValues = query.MemberValues.ToDictionary(keyValue => keyValue.Key, keyValue => keyValue.Value);
 
             // Get arguments values
             var arguments = new object[ctorParams.Length];
@@ -126,34 +159,17 @@ namespace With
                 var arg = ctorParams[index];
                 var memberName = getMemberNameFromArgument(arg.Name);
 
-                // New value ?
+                // Update value ?
                 object newValue;
-                if (newValues.TryGetValue(memberName, out newValue))
+                if (updatedValues.TryGetValue(memberName, out newValue))
                 {
                     arguments[index] = newValue;
                     continue;
                 }
 
-                // Property ?
-                var propertyInfo = typeToBuild.GetRuntimeProperty(memberName);
-                if (null != propertyInfo)
-                {
-                    arguments[index] = propertyInfo.GetValue(query.Source);
-                    continue;
-                }
-
-                // Field ?
-                var fieldInfo = typeToBuild.GetRuntimeField(memberName);
-                if (null != fieldInfo)
-                {
-                    arguments[index] = fieldInfo.GetValue(query.Source);
-                    continue;
-                }
-
-                throw new InvalidOperationException(
-                    string.Format(
-                        "Unable to find a value matching constructor argument named '{0}'",
-                        arg.Name));
+                // Get member value
+                var valueProvider = GetMemberValueProvider(typeInfo);
+                arguments[index] = valueProvider(query.Source, memberName);
             }
 
             var constructor = ConstructorProvider(ctorInfo);
