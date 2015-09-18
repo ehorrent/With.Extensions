@@ -16,12 +16,11 @@ namespace With
     public delegate object Constructor(object[] arguments);
 
     /// <summary>
-    /// Returns the property/field value of the specified object
+    /// Returns a property/field value of the specified object
     /// </summary>
     /// <param name="obj">The object whose property/field value will be returned</param>
-    /// <param name="memberName">The name of the property/field</param>
     /// <returns>The property/field value of the specified object</returns>
-    public delegate object MemberValueProvider(object obj, string memberName);
+    public delegate object MemberValueProvider(object obj);
 
     /// <summary>
     /// Provides 'With' method on all classes
@@ -39,14 +38,13 @@ namespace With
         static WithExtensions()
         {
             // Default constructor provider, using pure reflection
-            ////ConstructorProvider = ctor => ctor.Invoke;
+            ConstructorProvider = ctor => ctor.Invoke;
 
-            // For better performances, we put in cache compiled constructors
-            ConstructorProvider = CacheConstructorProvider.New(
-                                    ExpressionConstructorProvider.CreateConstructor);
-
-            GetMemberValueProvider = typeInfo => (obj, memberName) =>
+            // Default property/field value provider
+            GetMemberValueProvider = (type, memberName) => obj =>
             {
+                var typeInfo = type.GetTypeInfo();
+
                 // Property ?
                 var propertyInfo = typeInfo.GetDeclaredProperty(memberName);
                 if (null != propertyInfo)
@@ -62,6 +60,12 @@ namespace With
                         "Unable to find a field/property value for '{0}'",
                         memberName));
             };
+
+            // For better performances, we put in cache compiled constructors
+            ConstructorProvider = CacheConstructorProvider.New(
+                                    ExpressionConstructorProvider.Create);
+
+            GetMemberValueProvider = ExpressionMemberValueProvider.Create;
         }
 
         /// <summary>
@@ -72,7 +76,7 @@ namespace With
         /// <summary>
         /// Provides methods used to retrieve field/property values of a specified object
         /// </summary>
-        public static Func<TypeInfo, MemberValueProvider> GetMemberValueProvider { get; set; }
+        public static Func<Type, string, MemberValueProvider> GetMemberValueProvider { get; set; }
 
         /// <summary>
         /// Creates a query to copy and update an object.
@@ -168,8 +172,8 @@ namespace With
                 }
 
                 // Get member value
-                var valueProvider = GetMemberValueProvider(typeInfo);
-                arguments[index] = valueProvider(query.Source, memberName);
+                var valueProvider = GetMemberValueProvider(typeToBuild, memberName);
+                arguments[index] = valueProvider(query.Source);
             }
 
             var constructor = ConstructorProvider(ctorInfo);

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace With
 {
@@ -16,18 +11,21 @@ namespace With
         /// <summary>
         /// Creates a compiled member value provider for a specified type
         /// </summary>
-        /// <returns></returns>
-        public static MemberValueProvider GetMemberValueProvider()
+        /// <param name="type">The type containing property/field named 'memberName'</param>
+        /// <param name="memberName">The name of a property/field to be accessed</param>
+        /// <returns>Value of the property/field</returns>
+        public static MemberValueProvider Create(Type type, string memberName)
         {
             // Get arguments
             var objArg = Expression.Parameter(typeof(object), "obj");
-            var memberNameArg = Expression.Parameter(typeof(string), "memberName");
-            var getValue = Expression.PropertyOrField(objArg, "");
-
+            var castedArg = Expression.Convert(objArg, type);
+            var getValue = Expression.Convert(
+                Expression.PropertyOrField(castedArg, memberName),
+                typeof(object));
+            
             var getMemberLambda = Expression.Lambda<MemberValueProvider>(
                 getValue,
-                objArg,
-                memberNameArg);
+                objArg);
 
             return getMemberLambda.Compile();
         }

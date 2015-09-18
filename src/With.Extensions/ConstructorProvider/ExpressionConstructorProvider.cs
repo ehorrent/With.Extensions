@@ -13,7 +13,7 @@ namespace With
         /// </summary>
         /// <param name="ctorInfo">Metadatas used to create the constructor</param>
         /// <returns>Corresponding constructor (if existing)</returns>
-        public static Constructor CreateConstructor(ConstructorInfo ctorInfo)
+        public static Constructor Create(ConstructorInfo ctorInfo)
         {
             // Get arguments
             var argsExpr = Expression.Parameter(typeof(object[]), "arguments");
