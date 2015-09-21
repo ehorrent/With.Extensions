@@ -18,20 +18,20 @@ namespace With
         /// <summary>
         /// Values to update (key = field/property name)
         /// </summary>
-        public readonly IEnumerable<KeyValuePair<string, object>> MemberValues;
+        public readonly IEnumerable<KeyValuePair<string, object>> PropertyOrFieldValues;
 
         /// <summary>
         /// Create an instance of <see cref="T:CreateUpdateQuery"/> type
         /// </summary>
         /// <param name="source">Instance to wrap</param>
-        /// <param name="memberValues">Values to update (key = field/property name)</param>
-        public CopyUpdateQuery(T source, IEnumerable<KeyValuePair<string, object>> memberValues)
+        /// <param name="propertyOrFieldValues">Values to update (key = field/property name)</param>
+        public CopyUpdateQuery(T source, IEnumerable<KeyValuePair<string, object>> propertyOrFieldValues)
         {
             if (null == source) throw new ArgumentNullException("source");
-            if (null == memberValues) throw new ArgumentNullException("memberValues");
+            if (null == propertyOrFieldValues) throw new ArgumentNullException("memberValues");
 
             this.Source = source;
-            this.MemberValues = memberValues;
+            this.PropertyOrFieldValues = propertyOrFieldValues;
         }
     }
 }
