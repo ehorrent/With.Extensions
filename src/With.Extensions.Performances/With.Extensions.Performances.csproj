@@ -50,7 +50,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\With.Extensions\With.Extensions.csproj">
+    <ProjectReference Include="..\With.Extensions\With.Extensions.csproj">
       <Project>{cfe5923d-f84a-44e7-a0b5-01feda8894f2}</Project>
       <Name>With.Extensions</Name>
     </ProjectReference>
