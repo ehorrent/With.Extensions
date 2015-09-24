@@ -16,6 +16,8 @@ namespace With.Providers
         /// <returns>Corresponding constructor (if existing)</returns>
         public static Constructor BuildConstructor(ConstructorInfo ctorInfo)
         {
+            if (null == ctorInfo) throw new ArgumentNullException("ctorInfo");
+
             // Get arguments
             var argsExpr = Expression.Parameter(typeof(object[]), "arguments");
 
@@ -48,6 +50,9 @@ namespace With.Providers
         /// <returns>Value of the property/field</returns>
         public static PropertyOrFieldProvider BuildPropertyOrFieldProvider(Type type, string propertyOrFieldName)
         {
+            if (null == type) throw new ArgumentNullException("type");
+            if (null == propertyOrFieldName) throw new ArgumentNullException("propertyOrFieldName");
+
             // Get arguments
             var objArg = Expression.Parameter(typeof(object), "obj");
             var castedArg = Expression.Convert(objArg, type);
