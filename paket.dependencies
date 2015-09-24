@@ -1,0 +1,6 @@
+source https://api.nuget.org/v3/index.json
+source https://www.nuget.org/api/v2/
+
+nuget NUnit 2.6.4 framework: >= net45
+nuget RhinoMocks 3.6.1 framework: >= net45
+nuget Fake framework: >= net45

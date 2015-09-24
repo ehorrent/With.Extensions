@@ -9,7 +9,7 @@ namespace With.Tests
     {
         [Test]
         [ExpectedException(exceptionType: typeof(InvalidOperationException))]
-        public void With_MultipleCtors_Exception()
+        public void With_MultipleCtorsObject_Exception()
         {
             // Test
             var obj = new Immutable_MultipleCtors();
@@ -18,7 +18,7 @@ namespace With.Tests
 
         [Test]
         [ExpectedException(exceptionType: typeof(ArgumentException))]
-        public void With_LambdaIsConstantAccess_Exception()
+        public void With_LambdaSelectorReturnsConstant_Exception()
         {
             // Test
             var obj = Tuple.Create("First Value", 10);
@@ -27,7 +27,7 @@ namespace With.Tests
 
         [Test]
         [ExpectedException(exceptionType: typeof(ArgumentException))]
-        public void With_LambdaIsOtherInstanceMemberAccess_Exception()
+        public void With_LambdaSelectorReturnsOtherInstanceMemberAccess_Exception()
         {
             // Test
             var obj = Tuple.Create("First Value", 10);
@@ -55,7 +55,7 @@ namespace With.Tests
         }
 
         [Test]
-        public void With_MutableChangeProperty_Ok()
+        public void With_ChangeMutableObjectProperty_Ok()
         {
             const string newFirstValue = "New first Value";
             const string secondValue = "Second value";
@@ -73,7 +73,7 @@ namespace With.Tests
         }
 
         [Test]
-        public void With_ImmutableChangeField_Ok()
+        public void With_ChangeImmutableObjectField_Ok()
         {
             const string firstValue = "First Value";
             DateTime newSecondValue = new DateTime(2010, 2, 12);
@@ -93,7 +93,7 @@ namespace With.Tests
         }
 
         [Test]
-        public void With_ImmutableChangeProperty_Ok()
+        public void With_ChangeImmutableObjectProperty_Ok()
         {
             const string newFirstValue = "New first Value";
             const int secondValue = 10;

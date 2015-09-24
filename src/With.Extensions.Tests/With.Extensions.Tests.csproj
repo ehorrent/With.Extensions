@@ -28,16 +28,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Rhino.Mocks">
-      <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassPatterns\Immutable.cs" />
@@ -45,6 +39,8 @@
     <Compile Include="ClassPatterns\Immutable_OtherNamingConvention.cs" />
     <Compile Include="ClassPatterns\Mutable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\ExpressionProvidersTest.cs" />
+    <Compile Include="Providers\ReflectionProvidersTest.cs" />
     <Compile Include="WithExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,4 +52,27 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <Import Project="..\..\.paket\paket.targets" />
+  <Choose>
+    <When Condition="($(TargetFrameworkIdentifier) == 'WindowsPhone') Or ($(TargetFrameworkIdentifier) == 'WindowsPhoneApp') Or ($(TargetFrameworkIdentifier) == 'Silverlight') Or ($(TargetFrameworkIdentifier) == '.NETCore') Or ($(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6')) Or ($(TargetFrameworkIdentifier) == 'MonoAndroid') Or ($(TargetFrameworkIdentifier) == 'MonoTouch') Or ($(TargetFrameworkIdentifier) == 'Xamarin.iOS') Or ($(TargetFrameworkIdentifier) == 'Xamarin.Mac')">
+      <ItemGroup>
+        <Reference Include="nunit.framework">
+          <HintPath>..\..\packages\NUnit\lib\nunit.framework.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6')">
+      <ItemGroup>
+        <Reference Include="Rhino.Mocks">
+          <HintPath>..\..\packages\RhinoMocks\lib\net\Rhino.Mocks.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
 </Project>

@@ -2,3 +2,5 @@
 *.user
 /.vs/
 *.Extensions.userprefs
+/.fake/
+/.nuget/

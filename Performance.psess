@@ -20,7 +20,7 @@
       <PdhCountersRate>500</PdhCountersRate>
       <PdhCounters>
         <PdhCounter>\Disque physique(_Total)\Longueur moyenne de file d’attente du disque</PdhCounter>
-        <PdhCounter>\M&amp;#233;moire\Pages/s</PdhCounter>
+        <PdhCounter>\M&amp;amp;amp;amp;amp;#233;moire\Pages/s</PdhCounter>
         <PdhCounter>\Processeur(_Total)\% temps processeur</PdhCounter>
       </PdhCounters>
     </PdhSettings>
@@ -97,6 +97,11 @@
       <ProjName>With.Extensions.Performances</ProjName>
     </ProjBinary>
   </Binaries>
+  <Reports>
+    <Report>
+      <Path>Report150922.vsp</Path>
+    </Report>
+  </Reports>
   <Launches>
     <ProjBinary>
       <Path>:PB:{8C68A44B-5D86-45FD-9545-4F919761A10B}|src\With.Extensions.Performances\With.Extensions.Performances\With.Extensions.Performances.csproj</Path>
