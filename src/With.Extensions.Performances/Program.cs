@@ -28,12 +28,8 @@ namespace With.Extensions.Performances
             Console.WriteLine("Appuyez sur une touche pour continuer...");
             Console.ReadKey();
 
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
             for (int i = 0; i < 100; ++i)
                 action();
-            stopWatch.Stop();
-            Console.WriteLine("Optimisé : " + stopWatch.Elapsed);
 
             /*WithExtensions.ConstructorProvider = ReflectionProviders.GetConstructor;
             WithExtensions.PropertyOrFieldProvider = ReflectionProviders.GetPropertyOrFieldProvider;
