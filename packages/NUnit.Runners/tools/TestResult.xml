@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="D:\git\With.Extensions\src\With.Extensions.Tests\bin\Release\With.Extensions.Tests.dll" total="11" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2015-09-25" time="14:17:32">
+  <environment nunit-version="2.6.4.14350" clr-version="2.0.50727.5472" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="D:\git\With.Extensions\packages\NUnit.Runners\tools" machine-name="ALT161-P" user="ehorrent" user-domain="ALTIMA" />
+  <culture-info current-culture="fr-FR" current-uiculture="fr-FR" />
+  <test-suite type="Assembly" name="D:\git\With.Extensions\src\With.Extensions.Tests\bin\Release\With.Extensions.Tests.dll" executed="True" result="Success" success="True" time="0.221" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="With" executed="True" result="Success" success="True" time="0.214" asserts="0">
+        <results>
+          <test-suite type="Namespace" name="Extensions" executed="True" result="Success" success="True" time="0.094" asserts="0">
+            <results>
+              <test-suite type="Namespace" name="Tests" executed="True" result="Success" success="True" time="0.094" asserts="0">
+                <results>
+                  <test-suite type="Namespace" name="Providers" executed="True" result="Success" success="True" time="0.094" asserts="0">
+                    <results>
+                      <test-suite type="TestFixture" name="ExpressionProvidersTest" executed="True" result="Inconclusive" success="False" time="0.004" asserts="0" />
+                      <test-suite type="TestFixture" name="ExpressionProvidersTest+BuildConstructor" executed="True" result="Success" success="True" time="0.077" asserts="0">
+                        <results>
+                          <test-case name="With.Extensions.Tests.Providers.ExpressionProvidersTest+BuildConstructor.BuildConstructor_NullArgument_Exception" executed="True" result="Success" success="True" time="0.075" asserts="0" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="ExpressionProvidersTest+BuildPropertyOrFieldProvider" executed="True" result="Success" success="True" time="0.002" asserts="0">
+                        <results>
+                          <test-case name="With.Extensions.Tests.Providers.ExpressionProvidersTest+BuildPropertyOrFieldProvider.BuildPropertyOrFieldProvider_NullArgument_Exception" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="ReflectionProvidersTest" executed="True" result="Inconclusive" success="False" time="0.000" asserts="0" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+          <test-suite type="Namespace" name="Tests" executed="True" result="Success" success="True" time="0.117" asserts="0">
+            <results>
+              <test-suite type="TestFixture" name="WithExtensionTest" executed="True" result="Success" success="True" time="0.116" asserts="0">
+                <results>
+                  <test-case name="With.Tests.WithExtensionTest.With_Chaining_SingleCreation" executed="True" result="Success" success="True" time="0.092" asserts="1" />
+                  <test-case name="With.Tests.WithExtensionTest.With_ChainingCalls_Ok" executed="True" result="Success" success="True" time="0.002" asserts="1" />
+                  <test-case name="With.Tests.WithExtensionTest.With_ChangeImmutableObjectField_Ok" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                  <test-case name="With.Tests.WithExtensionTest.With_ChangeImmutableObjectProperty_Ok" executed="True" result="Success" success="True" time="0.002" asserts="1" />
+                  <test-case name="With.Tests.WithExtensionTest.With_ChangeMutableObjectProperty_Ok" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                  <test-case name="With.Tests.WithExtensionTest.With_LambdaSelectorReturnsConstant_Exception" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+                  <test-case name="With.Tests.WithExtensionTest.With_LambdaSelectorReturnsOtherInstanceMemberAccess_Exception" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                  <test-case name="With.Tests.WithExtensionTest.With_MultipleCtorsObject_Exception" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                  <test-case name="With.Tests.WithExtensionTest.With_OtherNamingConvention_Ok" executed="True" result="Success" success="True" time="0.002" asserts="1" />
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

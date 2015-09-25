@@ -3,4 +3,5 @@ NUGET
   specs:
     FAKE (4.4.4) - framework: >= net45
     NUnit (2.6.4) - framework: >= net45
+    NUnit.Runners (2.6.4) - framework: >= net45
     RhinoMocks (3.6.1) - framework: >= net45
