@@ -3,5 +3,4 @@
 /.vs/
 *.Extensions.userprefs
 /.fake/
-/.nuget/
 /reports/
