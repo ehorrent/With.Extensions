@@ -19,9 +19,9 @@ namespace With.Providers
         }
 
         /// <summary>
-        /// Returns a value provider for the specified type and member (by using PropertyInfo.GetValue or FieldInfo.GetValue)
+        /// Returns a value provider for the specified type and member name (by using PropertyInfo.GetValue or FieldInfo.GetValue)
         /// </summary>
-        /// <param name="type">The type containing property/field named 'memberName'</param>
+        /// <param name="type">The type containing property/field named 'propertyOrFieldName'</param>
         /// <param name="propertyOrFieldName">The name of a property/field to be accessed</param>
         /// <returns>Value of the property/field</returns>
         public static PropertyOrFieldProvider GetPropertyOrFieldProvider(Type type, string propertyOrFieldName)

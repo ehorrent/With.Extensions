@@ -10,7 +10,7 @@ namespace With.Providers
     public static class ExpressionProviders
     {
         /// <summary>
-        /// Provides a constructor method, based on the specified constructor infos.
+        /// Creates a constructor method, based on the specified constructor infos.
         /// </summary>
         /// <param name="ctorInfo">Metadatas used to create the constructor</param>
         /// <returns>Corresponding constructor (if existing)</returns>
@@ -43,9 +43,9 @@ namespace With.Providers
         }
 
         /// <summary>
-        /// Creates a compiled member value (meaning property or field value) provider for specified type and member
+        /// Creates a compiled property/field provider for a specified type and member name
         /// </summary>
-        /// <param name="type">The type containing property/field named 'memberName'</param>
+        /// <param name="type">The type containing property/field named 'propertyOrFieldName'</param>
         /// <param name="propertyOrFieldName">The name of a property/field to be accessed</param>
         /// <returns>Value of the property/field</returns>
         public static PropertyOrFieldProvider BuildPropertyOrFieldProvider(Type type, string propertyOrFieldName)
