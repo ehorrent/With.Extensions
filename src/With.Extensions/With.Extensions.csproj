@@ -43,7 +43,6 @@
     <Compile Include="Providers\ExpressionProviders.cs" />
     <Compile Include="Naming\PascalCase.cs" />
     <Compile Include="Helpers\EnumerableExtension.cs" />
-    <Compile Include="Providers.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup />
