@@ -10,6 +10,20 @@ using With.Providers;
 namespace With
 {
     /// <summary>
+    /// Create a new instance, using specified constructor's arguments
+    /// </summary>
+    /// <param name="arguments">Ordered constructor's arguments</param>
+    /// <returns>New instance</returns>
+    public delegate object Constructor(object[] arguments);
+
+    /// <summary>
+    /// Returns a property/field value of the specified object
+    /// </summary>
+    /// <param name="obj">The object whose property/field value will be returned</param>
+    /// <returns>The property/field value of the specified object</returns>
+    public delegate object PropertyOrFieldProvider(object obj);
+
+    /// <summary>
     /// Provides 'With' method on all classes
     /// </summary>
     public static class WithExtensions
@@ -20,7 +34,7 @@ namespace With
         private static readonly IEnumerable<KeyValuePair<string, object>> EmptyList = Enumerable.Empty<KeyValuePair<string, object>>();
 
         /// <summary>
-        /// Static constructor, used to instantiate default constructor provider.
+        /// Static constructor, used to instantiate default providers.
         /// </summary>
         static WithExtensions()
         {
@@ -48,8 +62,8 @@ namespace With
         /// <param name="value">New value for the field/property</param>
         /// <returns>Query used to create the new desired object</returns>
         public static CopyUpdateQuery<TSource> With<TSource, TPropertyOrField>(
-            this TSource source, 
-            Expression<Func<TSource, TPropertyOrField>> propertyOrFieldSelector, 
+            this TSource source,
+            Expression<Func<TSource, TPropertyOrField>> propertyOrFieldSelector,
             TPropertyOrField value)
             where TSource : class
         {
@@ -72,8 +86,8 @@ namespace With
         /// <param name="value">New value for the field/property</param>
         /// <returns>Query used to create the new desired object</returns>
         public static CopyUpdateQuery<TSource> With<TSource, TPropertyOrField>(
-            this CopyUpdateQuery<TSource> query, 
-            Expression<Func<TSource, TPropertyOrField>> propertyOrFieldSelector, 
+            this CopyUpdateQuery<TSource> query,
+            Expression<Func<TSource, TPropertyOrField>> propertyOrFieldSelector,
             TPropertyOrField value)
             where TSource : class
         {
@@ -98,7 +112,7 @@ namespace With
         /// </param>
         /// <returns>New object, with updated values</returns>
         public static TSource Create<TSource>(
-            this CopyUpdateQuery<TSource> query, 
+            this CopyUpdateQuery<TSource> query,
             Func<string, string> getPropertyOrFieldNameFromArgument = null)
             where TSource : class
         {
@@ -133,7 +147,7 @@ namespace With
                     continue;
                 }
 
-                // Get member value
+                // Get property/field value
                 var valueProvider = PropertyOrFieldProvider(typeToBuild, propertyOrFieldName);
                 arguments[index] = valueProvider(query.Source);
             }
@@ -145,10 +159,10 @@ namespace With
         /// <summary>
         /// Retrieve field/property name returned by a lambda expression.
         /// </summary>
-        /// <typeparam name="TSource">Type of the object owning the member</typeparam>
+        /// <typeparam name="TSource">Type of the object owning the field/property</typeparam>
         /// <typeparam name="TPropertyOrField">Type of the field/property</typeparam>
         /// <param name="selector">Lambda expression to inspect</param>
-        /// <returns>Field/property name returned by the lambda expression (lowered)</returns>
+        /// <returns>Field/property name returned by the lambda expression</returns>
         private static string GetReturnedPropertyOrFieldName<TSource, TPropertyOrField>(Expression<Func<TSource, TPropertyOrField>> selector)
             where TSource : class
         {
