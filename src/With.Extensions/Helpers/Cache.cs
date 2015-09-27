@@ -5,13 +5,13 @@ namespace With.Helpers
 {
     /// <summary>
     /// Contains memoization methods.
-    /// Already computed results are stored into an internal ConcurrentDictionary. 
+    /// Already computed results are stored into an internal ConcurrentDictionary.
     /// </summary>
     public static class Cache
     {
         /// <summary>
         /// Memoization on a method with 1 input argument.
-        /// Already computed results are stored into an internal ConcurrentDictionary. 
+        /// Already computed results are stored into an internal ConcurrentDictionary.
         /// </summary>
         /// <typeparam name="TInput">The type of the parameter of the method</typeparam>
         /// <typeparam name="TOutput">Type of the return value</typeparam>
@@ -29,15 +29,15 @@ namespace With.Helpers
                 if (memoryCache.TryGetValue(ctorInfo, out cacheEntry))
                     return cacheEntry;
 
-                var constructor = func(ctorInfo);
-                memoryCache[ctorInfo] = constructor;
-                return constructor;
+                var result = func(ctorInfo);
+                memoryCache[ctorInfo] = result;
+                return result;
             };
         }
 
         /// <summary>
         /// Memoization on a method with 2 input arguments.
-        /// Already computed results are stored into an internal ConcurrentDictionary. 
+        /// Already computed results are stored into an internal ConcurrentDictionary.
         /// </summary>
         /// <typeparam name="TInput1">The type of the first parameter of the method</typeparam>
         /// <typeparam name="TInput2">The type of the second parameter of the method</typeparam>
@@ -57,9 +57,9 @@ namespace With.Helpers
                 if (memoryCache.TryGetValue(cacheKey, out cacheEntry))
                     return cacheEntry;
 
-                var memberValueProvider = func(arg0, arg1);
-                memoryCache[cacheKey] = memberValueProvider;
-                return memberValueProvider;
+                var result = func(arg0, arg1);
+                memoryCache[cacheKey] = result;
+                return result;
             };
         }
     }
