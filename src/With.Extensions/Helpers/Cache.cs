@@ -23,15 +23,15 @@ namespace With.Helpers
 
             var memoryCache = new ConcurrentDictionary<TInput, TOutput>();
 
-            return (ctorInfo) =>
+            return (arg) =>
             {
                 TOutput cacheEntry;
-                if (memoryCache.TryGetValue(ctorInfo, out cacheEntry))
+                if (memoryCache.TryGetValue(arg, out cacheEntry))
                     return cacheEntry;
 
-                var result = func(ctorInfo);
-                memoryCache[ctorInfo] = result;
-                return result;
+                var output = func(arg);
+                memoryCache[arg] = output;
+                return output;
             };
         }
 
@@ -57,9 +57,9 @@ namespace With.Helpers
                 if (memoryCache.TryGetValue(cacheKey, out cacheEntry))
                     return cacheEntry;
 
-                var result = func(arg0, arg1);
-                memoryCache[cacheKey] = result;
-                return result;
+                var output = func(arg0, arg1);
+                memoryCache[cacheKey] = output;
+                return output;
             };
         }
     }
