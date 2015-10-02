@@ -48,7 +48,7 @@ namespace With.Providers
         /// <param name="type">The type containing property/field named 'propertyOrFieldName'</param>
         /// <param name="propertyOrFieldName">The name of a property/field to be accessed</param>
         /// <returns>Value of the property/field</returns>
-        public static PropertyOrFieldProvider BuildPropertyOrFieldProvider(Type type, string propertyOrFieldName)
+        public static PropertyOrFieldAccessor BuildPropertyOrFieldAccessor(Type type, string propertyOrFieldName)
         {
             if (null == type) throw new ArgumentNullException("type");
             if (null == propertyOrFieldName) throw new ArgumentNullException("propertyOrFieldName");
@@ -60,7 +60,7 @@ namespace With.Providers
                 Expression.PropertyOrField(castedArg, propertyOrFieldName),
                 typeof(object));
 
-            var getMemberLambda = Expression.Lambda<PropertyOrFieldProvider>(
+            var getMemberLambda = Expression.Lambda<PropertyOrFieldAccessor>(
                 getValue,
                 objArg);
 

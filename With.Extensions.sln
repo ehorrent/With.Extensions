@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuspec", "nuspec", "{26BAF5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "With.Extensions", "src\With.Extensions\With.Extensions.csproj", "{CFE5923D-F84A-44E7-A0B5-01FEDA8894F2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{902DCA9D-6429-4E98-A960-EFDC39918A1D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Performances", "Performances", "{902DCA9D-6429-4E98-A960-EFDC39918A1D}"
 	ProjectSection(SolutionItems) = preProject
 		Performance.psess = Performance.psess
 	EndProjectSection
@@ -53,6 +53,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FB4BD1C8-11AD-4D9F-A41F-0281D7D7ACF1} = {E7C676A2-2135-44A3-A929-48C7F0C3B289}
-		{8C68A44B-5D86-45FD-9545-4F919761A10B} = {E7C676A2-2135-44A3-A929-48C7F0C3B289}
+		{8C68A44B-5D86-45FD-9545-4F919761A10B} = {902DCA9D-6429-4E98-A960-EFDC39918A1D}
 	EndGlobalSection
 EndGlobal

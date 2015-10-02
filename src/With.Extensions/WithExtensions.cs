@@ -21,7 +21,7 @@ namespace With
     /// </summary>
     /// <param name="obj">The object whose property/field value will be returned</param>
     /// <returns>The property/field value of the specified object</returns>
-    public delegate object PropertyOrFieldProvider(object obj);
+    public delegate object PropertyOrFieldAccessor(object obj);
 
     /// <summary>
     /// Provides 'With' method on all classes
@@ -29,17 +29,12 @@ namespace With
     public static class WithExtensions
     {
         /// <summary>
-        /// Empty list of KeyValuePair elements
-        /// </summary>
-        private static readonly IEnumerable<KeyValuePair<string, object>> EmptyList = Enumerable.Empty<KeyValuePair<string, object>>();
-
-        /// <summary>
         /// Static constructor, used to instantiate default providers.
         /// </summary>
         static WithExtensions()
         {
             ConstructorProvider = Cache.Memoize<ConstructorInfo, Constructor>(ExpressionProviders.BuildConstructor);
-            PropertyOrFieldProvider = Cache.Memoize<Type, string, PropertyOrFieldProvider>(ExpressionProviders.BuildPropertyOrFieldProvider);
+            AccessorProvider = Cache.Memoize<Type, string, PropertyOrFieldAccessor>(ExpressionProviders.BuildPropertyOrFieldAccessor);
         }
 
         /// <summary>
@@ -50,7 +45,7 @@ namespace With
         /// <summary>
         /// Provides methods used to retrieve field/property values for a specified object
         /// </summary>
-        public static Func<Type, string, PropertyOrFieldProvider> PropertyOrFieldProvider { get; set; }
+        public static Func<Type, string, PropertyOrFieldAccessor> AccessorProvider { get; set; }
 
         /// <summary>
         /// Creates a query to copy and update an object.
@@ -69,11 +64,12 @@ namespace With
         {
             // Get field/property name accessed by the selector
             var propertyOrFieldName = GetReturnedPropertyOrFieldName(propertyOrFieldSelector);
-
+            
             // Create query
             return new CopyUpdateQuery<TSource>(
                 source,
-                EmptyList.Concat(KeyValuePair.Create(propertyOrFieldName, (object)value)));
+                Enumerable.Empty<KeyValuePair<string, object>>()
+                          .Concat(KeyValuePair.Create(propertyOrFieldName, (object)value)));
         }
 
         /// <summary>
@@ -93,7 +89,7 @@ namespace With
         {
             // Get field/property name accessed by the selector
             var propertyOrFieldName = GetReturnedPropertyOrFieldName(propertyOrFieldSelector);
-
+            
             // Create query
             return new CopyUpdateQuery<TSource>(
                 query.Source,
@@ -124,13 +120,16 @@ namespace With
             var typeInfo = typeToBuild.GetTypeInfo();
             var ctorInfos = typeInfo.DeclaredConstructors;
             if (1 != ctorInfos.Count())
-                throw new InvalidOperationException("Type " + typeToBuild + " must only contain one constructor");
+                throw new InvalidOperationException(
+                    string.Format(
+                        "Type {0} must only contain one constructor",
+                        typeToBuild));
 
             // Get constructor parameters
             var ctorInfo = ctorInfos.First();
             var ctorParams = ctorInfo.GetParameters();
 
-            var updatedValues = query.PropertyOrFieldValues.ToDictionary(keyValue => keyValue.Key, keyValue => keyValue.Value);
+            var newValues = query.PropertyOrFieldValues.ToDictionary(keyValue => keyValue.Key, keyValue => keyValue.Value);
 
             // Get arguments values
             var arguments = new object[ctorParams.Length];
@@ -141,15 +140,15 @@ namespace With
 
                 // Update value ?
                 object newValue;
-                if (updatedValues.TryGetValue(propertyOrFieldName, out newValue))
+                if (newValues.TryGetValue(propertyOrFieldName, out newValue))
                 {
                     arguments[index] = newValue;
                     continue;
                 }
 
                 // Get property/field value
-                var valueProvider = PropertyOrFieldProvider(typeToBuild, propertyOrFieldName);
-                arguments[index] = valueProvider(query.Source);
+                var valueAccessor = AccessorProvider(typeToBuild, propertyOrFieldName);
+                arguments[index] = valueAccessor(query.Source);
             }
 
             var constructor = ConstructorProvider(ctorInfo);
