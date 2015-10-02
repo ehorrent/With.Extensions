@@ -28,7 +28,7 @@ namespace With
         public CopyUpdateQuery(T source, IEnumerable<KeyValuePair<string, object>> propertyOrFieldValues)
         {
             if (null == source) throw new ArgumentNullException("source");
-            if (null == propertyOrFieldValues) throw new ArgumentNullException("memberValues");
+            if (null == propertyOrFieldValues) throw new ArgumentNullException("propertyOrFieldValues");
 
             this.Source = source;
             this.PropertyOrFieldValues = propertyOrFieldValues;
