@@ -39,8 +39,8 @@
     <Compile Include="ClassPatterns\Immutable_OtherNamingConvention.cs" />
     <Compile Include="ClassPatterns\Mutable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\ExpressionProvidersTest.cs" />
-    <Compile Include="Providers\ReflectionProvidersTest.cs" />
+    <Compile Include="Providers\ConstructorProviderTest.cs" />
+    <Compile Include="Providers\AccessorProviderTest.cs" />
     <Compile Include="WithExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
