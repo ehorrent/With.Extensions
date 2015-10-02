@@ -1,9 +1,11 @@
 // include Fake lib
 #r @"packages/FAKE/tools/FakeLib.dll"
 open Fake
+open Fake.AssemblyInfoFile
+
+let version = "0.6.0"
 
 // NuGet settings
-let nugetPackageVersion = "0.6.0"
 let nugetToolPath = "./.nuget"
 let nugetPackageDir = "./.nuget/nupkg"
 
@@ -13,29 +15,33 @@ let nunitOutputPath =  "./reports/TestResults.xml"
 
 // Build solution
 Target "Build" (fun _ ->
-    let setParams defaults =
-      { defaults with
-          Verbosity = Some(Minimal)
-          Targets = ["Clean"; "Rebuild"]
-          Properties =
-          [
-            "Optimize", "True"
-            "DebugSymbols", "False"
-            "Configuration", "Release"
-          ]
-      }
+  // Update assembly info for the project With.Extension
+  CreateCSharpAssemblyInfo "./src/With.Extensions/Properties/AssemblyInfo.cs"
+    [Attribute.Title "With.Extensions"
+     Attribute.Description "Extension methods used to copy and update immutable classes (as copy and update record expression in F#)."
+     Attribute.Guid "cb6c3a37-63bb-488b-8778-bd52d97007ff"
+     Attribute.Product "With.Extensions"
+     Attribute.Version version
+     Attribute.FileVersion version]
 
-    build setParams "./With.Extensions.sln"
+  let setParams defaults =
+    { defaults with
+        Verbosity = Some(Minimal)
+        Targets = ["Clean"; "Rebuild"]
+        Properties = [("Configuration", "Release")]
+    }
+
+  build setParams "./With.Extensions.sln"
 )
 
 // Unit tests
 Target "NUnitTest" (fun _ ->
   let setParams defaults =
     { defaults with
-      ToolPath = nunitToolPath
-      Framework = "4.5"
-      DisableShadowCopy = false
-      OutputFile = nunitOutputPath
+        ToolPath = nunitToolPath
+        Framework = "4.5"
+        DisableShadowCopy = false
+        OutputFile = nunitOutputPath
     }
 
   !!("./src/**/bin/release/*.Tests.dll")
@@ -47,10 +53,10 @@ Target "CreatePackage" (fun _ ->
   CreateDir nugetPackageDir
   let setParams defaults =
     { defaults with
-      OutputPath = nugetPackageDir
-      Properties = [("Configuration", "Release")]
-      Version = nugetPackageVersion
-      WorkingDir = nugetPackageDir
+        OutputPath = nugetPackageDir
+        Properties = [("Configuration", "Release")]
+        Version = version
+        WorkingDir = nugetPackageDir
     }
 
   NuGetPack setParams "./src/With.Extensions/With.Extensions.csproj"
