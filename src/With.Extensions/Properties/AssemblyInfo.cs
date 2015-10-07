@@ -6,10 +6,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescriptionAttribute("Extension methods used to copy and update immutable classes (as copy and update record expression in F#).")]
 [assembly: GuidAttribute("cb6c3a37-63bb-488b-8778-bd52d97007ff")]
 [assembly: AssemblyProductAttribute("With.Extensions")]
-[assembly: AssemblyVersionAttribute("0.6.0")]
-[assembly: AssemblyFileVersionAttribute("0.6.0")]
+[assembly: AssemblyCompanyAttribute("Emmanuel Horrent")]
+[assembly: AssemblyVersionAttribute("0.6.1")]
+[assembly: AssemblyFileVersionAttribute("0.6.1")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "0.6.0";
+        internal const string Version = "0.6.1";
     }
 }
