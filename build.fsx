@@ -3,7 +3,7 @@
 open Fake
 open Fake.AssemblyInfoFile
 
-let version = "0.6.0"
+let version = "0.6.1"
 
 // NuGet settings
 let nugetToolPath = "./.nuget"
@@ -21,6 +21,7 @@ Target "Build" (fun _ ->
      Attribute.Description "Extension methods used to copy and update immutable classes (as copy and update record expression in F#)."
      Attribute.Guid "cb6c3a37-63bb-488b-8778-bd52d97007ff"
      Attribute.Product "With.Extensions"
+     Attribute.Company "Emmanuel Horrent"
      Attribute.Version version
      Attribute.FileVersion version]
 
@@ -40,7 +41,7 @@ Target "NUnitTest" (fun _ ->
     { defaults with
         ToolPath = nunitToolPath
         Framework = "4.5"
-        DisableShadowCopy = false
+        DisableShadowCopy = true
         OutputFile = nunitOutputPath
     }
 
@@ -68,4 +69,4 @@ Target "CreatePackage" (fun _ ->
   ==> "CreatePackage"
 
 // start build
-RunTargetOrDefault "Build"
+RunTargetOrDefault "NUnitTest"
