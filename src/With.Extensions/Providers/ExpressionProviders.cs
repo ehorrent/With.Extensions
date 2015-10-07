@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -18,11 +19,20 @@ namespace With.Providers
         {
             if (null == ctorInfo) throw new ArgumentNullException("ctorInfo");
 
-            // Get arguments
+            // Get lambda arguments
             var argsExpr = Expression.Parameter(typeof(object[]), "arguments");
 
             // Get constructor parameters values
             var ctorParameters = ctorInfo.GetParameters();
+
+            // Check if lambda arguments count == constructor parameters count
+            var validateArgsExpr = Expression.IfThen(
+                Expression.NotEqual(
+                    Expression.Constant(ctorParameters.Length), 
+                    Expression.ArrayLength(argsExpr)),
+                Expression.Throw(
+                    Expression.Constant(new ArgumentOutOfRangeException("arguments"))));
+
             var ctorParametersExpr = new UnaryExpression[ctorParameters.Length];
             for (int i = 0; i < ctorParameters.Length; ++i)
             {
@@ -32,11 +42,13 @@ namespace With.Providers
 
                 ctorParametersExpr[i] = Expression.Convert(arrayAccessExpr, ctorParameters[i].ParameterType);
             }
-
+            
             var ctorExpr = Expression.New(ctorInfo, ctorParametersExpr);
 
             var creatorExpr = Expression.Lambda<Constructor>(
-                ctorExpr,
+                Expression.Block(
+                    validateArgsExpr, 
+                    ctorExpr),
                 argsExpr);
 
             return creatorExpr.Compile();
