@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: GuidAttribute("cb6c3a37-63bb-488b-8778-bd52d97007ff")]
 [assembly: AssemblyProductAttribute("With.Extensions")]
 [assembly: AssemblyCompanyAttribute("Emmanuel Horrent")]
+[assembly: AssemblyCopyrightAttribute("Copyright © Emmanuel Horrent 2015")]
 [assembly: AssemblyVersionAttribute("0.6.1")]
 [assembly: AssemblyFileVersionAttribute("0.6.1")]
 namespace System {

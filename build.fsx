@@ -22,6 +22,7 @@ Target "Build" (fun _ ->
      Attribute.Guid "cb6c3a37-63bb-488b-8778-bd52d97007ff"
      Attribute.Product "With.Extensions"
      Attribute.Company "Emmanuel Horrent"
+     Attribute.Copyright "Copyright © Emmanuel Horrent 2015"
      Attribute.Version version
      Attribute.FileVersion version]
 
