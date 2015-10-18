@@ -38,6 +38,7 @@ Target "Build" (fun _ ->
 
 // Unit tests
 Target "NUnitTest" (fun _ ->
+  CreateDir (directory nunitOutputPath)
   let setParams defaults =
     { defaults with
         ToolPath = nunitToolPath
