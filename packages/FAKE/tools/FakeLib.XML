@@ -1907,6 +1907,45 @@
                      Silent = true })
 </summary>
 </member>
+<member name="M:Fake.DotCover.DotCoverMSTest(Microsoft.FSharp.Core.FSharpFunc{Fake.DotCover.DotCoverParams,Fake.DotCover.DotCoverParams},Microsoft.FSharp.Core.FSharpFunc{Fake.MSTest.MSTestParams,Fake.MSTest.MSTestParams},System.Collections.Generic.IEnumerable{System.String})">
+<summary>
+ Runs the dotCover &quot;cover&quot; command against the MSTest test runner.
+ ## Parameters
+
+  - `setDotCoverParams` - Function used to overwrite the dotCover report default parameters.
+  - `setMSTestParams` - Function used to overwrite the MSTest default parameters.
+
+ ## Sample
+
+     !! (buildDir @@ buildMode @@ &quot;/*.Unit.Tests.dll&quot;) 
+         |&gt; MSTest 
+             (fun  -&gt; dotCoverOptions )
+             (fun MSTestOptions -&gt; MSTestOptions) 
+</summary>
+</member>
+<member name="M:Fake.DotCover.buildMSTestArgsForDotCover(Fake.MSTest.MSTestParams,System.String[])">
+<summary>
+ Builds the command line arguments from the given parameter record and the given assemblies.
+ Runs all test assemblies in the same run for easier coverage management. 
+ [omit]
+</summary>
+</member>
+<member name="M:Fake.DotCover.DotCoverXUnit2(Microsoft.FSharp.Core.FSharpFunc{Fake.DotCover.DotCoverParams,Fake.DotCover.DotCoverParams},Microsoft.FSharp.Core.FSharpFunc{Fake.Testing.XUnit2.XUnit2Params,Fake.Testing.XUnit2.XUnit2Params},System.Collections.Generic.IEnumerable{System.String})">
+<summary>
+ Runs the dotCover &quot;cover&quot; command against the XUnit2 test runner.
+ ## Parameters
+
+  - `setDotCoverParams` - Function used to overwrite the dotCover report default parameters.
+  - `setXUnit2Params` - Function used to overwrite the XUnit2 default parameters.
+
+ ## Sample
+
+     !! (buildDir @@ buildMode @@ &quot;/*.Unit.Tests.dll&quot;) 
+         |&gt; DotCoverXUnit2 
+             (fun  -&gt; dotCoverOptions )
+             (fun nUnitOptions -&gt; nUnitOptions) 
+</summary>
+</member>
 <member name="M:Fake.DotCover.DotCoverNUnit(Microsoft.FSharp.Core.FSharpFunc{Fake.DotCover.DotCoverParams,Fake.DotCover.DotCoverParams},Microsoft.FSharp.Core.FSharpFunc{Fake.NUnitCommon.NUnitParams,Fake.NUnitCommon.NUnitParams},System.Collections.Generic.IEnumerable{System.String})">
 <summary>
  Runs the dotCover &quot;cover&quot; command against the NUnit test runner.
@@ -2642,6 +2681,11 @@
   - `patchDir` - The target directory
   - `srcFiles` - The source files
   - `findOldFileF` - A function which finds the old file
+</summary>
+</member>
+<member name="M:Fake.FileHelper.TestFile(System.String)">
+<summary>
+ Checks if the file exists
 </summary>
 </member>
 <member name="M:Fake.FileHelper.TestDir(System.String)">
@@ -4686,7 +4730,7 @@ Partial validation for folder name, based on http://msdn.microsoft.com/en-us/lib
 </member>
 <member name="T:Fake.MSBuildHelper.MSBuildProject">
 <summary>
- An type to represent MSBuild project files.
+ A type to represent MSBuild project files.
 </summary>
 </member>
 <member name="M:Fake.MSBuildHelper.BuildWebsites(System.String,System.Collections.Generic.IEnumerable{System.String})">
@@ -6801,9 +6845,29 @@ Partial validation for folder name, based on http://msdn.microsoft.com/en-us/lib
  Registry base keys.
 </summary>
 </member>
+<member name="M:Fake.RegistryHelper.getRegistrySubKeyNames(Fake.RegistryHelper.RegistryBaseKey,System.String)">
+<summary>
+ Returns all the subKey names of a registry key
+</summary>
+</member>
+<member name="M:Fake.RegistryHelper.deleteRegistrySubKey(Fake.RegistryHelper.RegistryBaseKey,System.String)">
+<summary>
+ Deletes a registry subKey
+</summary>
+</member>
+<member name="M:Fake.RegistryHelper.createRegistrySubKey(Fake.RegistryHelper.RegistryBaseKey,System.String)">
+<summary>
+ Create a registry subKey
+</summary>
+</member>
 <member name="M:Fake.RegistryHelper.valueExistsForKey(Fake.RegistryHelper.RegistryBaseKey,System.String,System.String)">
 <summary>
- Returns whether or not a registry value exists for a key
+ Returns whether or not a registry value name exists for a key
+</summary>
+</member>
+<member name="M:Fake.RegistryHelper.getRegistryValueNames(Fake.RegistryHelper.RegistryBaseKey,System.String)">
+<summary>
+ Returns all the value names of a registry key
 </summary>
 </member>
 <member name="M:Fake.RegistryHelper.deleteRegistryValue(Fake.RegistryHelper.RegistryBaseKey,System.String,System.String)">
@@ -6814,11 +6878,6 @@ Partial validation for folder name, based on http://msdn.microsoft.com/en-us/lib
 <member name="M:Fake.RegistryHelper.setRegistryValue``1(Fake.RegistryHelper.RegistryBaseKey,System.String,System.String,``0)">
 <summary>
  Sets a registry value
-</summary>
-</member>
-<member name="M:Fake.RegistryHelper.createRegistrySubKey(Fake.RegistryHelper.RegistryBaseKey,System.String)">
-<summary>
- Create a registry subKey
 </summary>
 </member>
 <member name="M:Fake.RegistryHelper.getRegistryValue64(Fake.RegistryHelper.RegistryBaseKey,System.String,System.String)">
@@ -7977,6 +8036,11 @@ Partial validation for folder name, based on http://msdn.microsoft.com/en-us/lib
 <member name="M:Fake.StringHelper.appendIfNotNull(System.Object,System.String)">
 <summary>
  Appends a text if the value is not null.
+</summary>
+</member>
+<member name="M:Fake.StringHelper.appendWithoutQuotesIfNotNull(System.Object,System.String)">
+<summary>
+ Appends a text without quoting if the value is not null.
 </summary>
 </member>
 <member name="M:Fake.StringHelper.appendIfFalse(System.Boolean)">
@@ -9287,7 +9351,7 @@ Partial validation for folder name, based on http://msdn.microsoft.com/en-us/lib
 
      Target &quot;Test&quot; (fun _ -&gt;
          !! (testDir @@ &quot;xUnit.Test.*.dll&quot;)
-           |&gt; xUnit2 (fun p -&gt; {p with HtmlOutputPath = (testDir @@ &quot;xunit.html&quot;)})
+         |&gt; xUnit2 (fun p -&gt; { p with HtmlOutputPath = Some (testDir @@ &quot;xunit.html&quot;) })
      )
 </summary>
 </member>
@@ -10899,14 +10963,29 @@ hidden
  Loads the given text into a XslCompiledTransform.
 </summary>
 </member>
+<member name="M:Fake.XMLHelper.XmlPokeInnerTextNS(System.String,System.Collections.Generic.IEnumerable{System.Tuple{System.String,System.String}},System.String,System.String)">
+<summary>
+ Replaces inner text of an xml node in a XML file at the location specified by a XPath expression, with support for namespaces.
+</summary>
+</member>
 <member name="M:Fake.XMLHelper.XmlPokeNS(System.String,System.Collections.Generic.IEnumerable{System.Tuple{System.String,System.String}},System.String,System.String)">
 <summary>
  Replaces text in a XML file at the location specified by a XPath expression, with support for namespaces.
 </summary>
 </member>
+<member name="M:Fake.XMLHelper.XPathReplaceInnerTextNS``1(System.String,System.String,``0,System.Xml.XmlDocument)">
+<summary>
+ Replaces inner text in a XML document specified by a XPath expression, with support for namespaces.
+</summary>
+</member>
 <member name="M:Fake.XMLHelper.XPathReplaceNS``1(System.String,System.String,``0,System.Xml.XmlDocument)">
 <summary>
  Replaces text in a XML document specified by a XPath expression, with support for namespaces.
+</summary>
+</member>
+<member name="M:Fake.XMLHelper.XmlPokeInnerText(System.String,System.String,System.String)">
+<summary>
+ Replaces the inner text of an xml node in a XML file at the location specified by a XPath expression.
 </summary>
 </member>
 <member name="M:Fake.XMLHelper.XmlPoke(System.String,System.String,System.String)">
@@ -10917,6 +10996,11 @@ hidden
 <member name="M:Fake.XMLHelper.XPathValue``1(System.String,``0,System.Xml.XmlDocument)">
 <summary>
  Selects a xml node value via XPath from the given document
+</summary>
+</member>
+<member name="M:Fake.XMLHelper.XPathReplaceInnerText(System.String,System.String,System.Xml.XmlDocument)">
+<summary>
+ Replaces the inner text of an xml node in the XML document specified by a XPath expression.
 </summary>
 </member>
 <member name="M:Fake.XMLHelper.XPathReplace(System.String,System.String,System.Xml.XmlDocument)">
@@ -11337,6 +11421,16 @@ hidden
  (Required) Path to keystore used to sign the app
 </summary>
 </member>
+<member name="P:Fake.XamarinHelper.AndroidPackageParams.VersionStepper">
+<summary>
+ Used for multiple APK packaging to set different version code par ABI
+</summary>
+</member>
+<member name="P:Fake.XamarinHelper.AndroidPackageParams.PackageAbiTargets">
+<summary>
+ Build an APK Targetting One ABI (used to reduce the size of the APK and support different CPU architectures)
+</summary>
+</member>
 <member name="P:Fake.XamarinHelper.AndroidPackageParams.Properties">
 <summary>
  Additional MSBuild properties, defaults to empty list
@@ -11424,6 +11518,14 @@ hidden
  The default iOS archive parameters
 </summary>
 </member>
+<member name="M:Fake.XamarinHelper.AndroidSignAndAlignPackages(Microsoft.FSharp.Core.FSharpFunc{Fake.XamarinHelper.AndroidSignAndAlignParams,Fake.XamarinHelper.AndroidSignAndAlignParams},System.Collections.Generic.IEnumerable{System.IO.FileInfo})">
+<summary>
+ Signs and aligns multiple Xamarin.Android packages, returning multiple FileInfo objects for the signed APK file
+ ## Parameters
+  - `setParams` - Function used to override the default build parameters
+  - `apkFiles` - FileInfo object for an unsigned APK file to sign and align
+</summary>
+</member>
 <member name="M:Fake.XamarinHelper.AndroidSignAndAlign(Microsoft.FSharp.Core.FSharpFunc{Fake.XamarinHelper.AndroidSignAndAlignParams,Fake.XamarinHelper.AndroidSignAndAlignParams},System.IO.FileInfo)">
 <summary>
  Signs and aligns a Xamarin.Android package, returning a FileInfo object for the signed APK file
@@ -11440,6 +11542,13 @@ hidden
 <member name="M:Fake.XamarinHelper.AndroidPackage(Microsoft.FSharp.Core.FSharpFunc{Fake.XamarinHelper.AndroidPackageParams,Fake.XamarinHelper.AndroidPackageParams})">
 <summary>
  Packages a Xamarin.Android app, returning a FileInfo object for the unsigned APK file
+ ## Parameters
+  - `setParams` - Function used to override the default build parameters
+</summary>
+</member>
+<member name="M:Fake.XamarinHelper.AndroidBuildPackages(Microsoft.FSharp.Core.FSharpFunc{Fake.XamarinHelper.AndroidPackageParams,Fake.XamarinHelper.AndroidPackageParams})">
+<summary>
+ Packages a Xamarin.Android app, returning a multiple FileInfo objects for the unsigned APK files
  ## Parameters
   - `setParams` - Function used to override the default build parameters
 </summary>
