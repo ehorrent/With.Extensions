@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using With.Helpers;
 
 namespace With.Providers
 {
@@ -19,11 +19,10 @@ namespace With.Providers
         {
             if (null == ctorInfo) throw new ArgumentNullException("ctorInfo");
 
+            var ctorParameters = ctorInfo.GetParameters();
+
             // Get lambda arguments
             var argsExpr = Expression.Parameter(typeof(object[]), "arguments");
-
-            // Get constructor parameters values
-            var ctorParameters = ctorInfo.GetParameters();
 
             // Check if lambda arguments count == constructor parameters count
             var validateArgsExpr = Expression.IfThen(
@@ -33,6 +32,7 @@ namespace With.Providers
                 Expression.Throw(
                     Expression.Constant(new ArgumentOutOfRangeException("arguments"))));
 
+            // Get expression for each constructor argument
             var ctorParametersExpr = new UnaryExpression[ctorParameters.Length];
             for (int i = 0; i < ctorParameters.Length; ++i)
             {
@@ -55,23 +55,35 @@ namespace With.Providers
         }
 
         /// <summary>
-        /// Creates a compiled property/field provider for a specified type and member name
+        /// Creates a compiled property/field accessor for a specified type and member name (by using Expression.PropertyOrField)
         /// </summary>
         /// <param name="type">The type containing property/field named 'propertyOrFieldName'</param>
         /// <param name="propertyOrFieldName">The name of a property/field to be accessed</param>
-        /// <returns>Value of the property/field</returns>
+        /// <returns>Accessor of the property/field</returns>
         public static PropertyOrFieldAccessor BuildPropertyOrFieldAccessor(Type type, string propertyOrFieldName)
         {
             if (null == type) throw new ArgumentNullException("type");
             if (null == propertyOrFieldName) throw new ArgumentNullException("propertyOrFieldName");
 
+            // Expression.PropertyOrField is case insensitive so we check manually if property/field exists with right naming
+            var typeInfo = type.GetTypeInfo();
+            var propertyInfo = typeInfo.GetProperty(propertyOrFieldName);
+            var fieldInfo = typeInfo.GetField(propertyOrFieldName);
+            if (null == propertyInfo && null == fieldInfo)
+                throw new InvalidOperationException(
+                    string.Format(
+                        "Unable to find a field/property value for '{0}' in type '{1}'",
+                        propertyOrFieldName,
+                        type.Name));
+            
             // Get arguments
             var objArg = Expression.Parameter(typeof(object), "obj");
             var castedArg = Expression.Convert(objArg, type);
             var getValue = Expression.Convert(
                 Expression.PropertyOrField(castedArg, propertyOrFieldName),
                 typeof(object));
-
+            
+            // Create lambda : obj => obj.propertyOrFieldName
             var getMemberLambda = Expression.Lambda<PropertyOrFieldAccessor>(
                 getValue,
                 objArg);
