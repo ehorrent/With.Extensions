@@ -33,8 +33,11 @@ namespace With
         /// </summary>
         static WithExtensions()
         {
-            ConstructorProvider = Cache.Memoize<ConstructorInfo, Constructor>(ExpressionProviders.BuildConstructor);
-            AccessorProvider = Cache.Memoize<Type, string, PropertyOrFieldAccessor>(ExpressionProviders.BuildPropertyOrFieldAccessor);
+            ConstructorProvider = ExpressionProviders.BuildConstructor;
+            ConstructorProvider = Cache.Memoize(ConstructorProvider);
+
+            AccessorProvider = ExpressionProviders.BuildPropertyOrFieldAccessor;
+            AccessorProvider = Cache.Memoize(AccessorProvider);
         }
 
         /// <summary>
@@ -43,7 +46,9 @@ namespace With
         public static Func<ConstructorInfo, Constructor> ConstructorProvider { get; set; }
 
         /// <summary>
-        /// Provides methods used to retrieve field/property values for a specified object
+        /// Provides accessors used to retrieve field/property values for a specified object type.
+        /// Arg1 : type of the object 
+        /// Arg2 : name of the field/property to access
         /// </summary>
         public static Func<Type, string, PropertyOrFieldAccessor> AccessorProvider { get; set; }
 
