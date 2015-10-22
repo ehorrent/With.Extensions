@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using With.Helpers;
 
 namespace With.Providers
 {
@@ -21,11 +22,12 @@ namespace With.Providers
         }
 
         /// <summary>
-        /// Returns a value provider for the specified type and member name (by using PropertyInfo.GetValue or FieldInfo.GetValue)
+        /// Returns a value accessor for the specified type and member name (by using PropertyInfo.GetValue or FieldInfo.GetValue).
+        /// Properties are given preference over fields.
         /// </summary>
         /// <param name="type">The type containing property/field named 'propertyOrFieldName'</param>
         /// <param name="propertyOrFieldName">The name of a property/field to be accessed</param>
-        /// <returns>Value of the property/field</returns>
+        /// <returns>Accessor of the property/field</returns>
         public static PropertyOrFieldAccessor GetPropertyOrFieldAccessor(Type type, string propertyOrFieldName)
         {
             if (null == type) throw new ArgumentNullException("type");
@@ -50,24 +52,6 @@ namespace With.Providers
                         "Unable to find a field/property value for '{0}'",
                         propertyOrFieldName));
             };
-        }
-
-        private static PropertyInfo GetProperty(this TypeInfo typeInfo, string propertyName)
-        {
-            var propertyInfo = typeInfo.GetDeclaredProperty(propertyName);
-            if (null == propertyInfo && null != typeInfo.BaseType)
-                propertyInfo = GetProperty(typeInfo.BaseType.GetTypeInfo(), propertyName);
-
-            return propertyInfo;
-        }
-
-        private static FieldInfo GetField(this TypeInfo typeInfo, string fieldName)
-        {
-            var fieldInfo = typeInfo.GetDeclaredField(fieldName);
-            if (null == fieldInfo && null != typeInfo.BaseType)
-                fieldInfo = GetField(typeInfo.BaseType.GetTypeInfo(), fieldName);
-
-            return fieldInfo;
         }
     }
 }
