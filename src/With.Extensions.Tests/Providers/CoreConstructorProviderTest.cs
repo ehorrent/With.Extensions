@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
-using With.Tests.ClassPatterns;
 
 namespace With.Extensions.Tests
 {
@@ -46,7 +45,7 @@ namespace With.Extensions.Tests
 
         [Test]
         [ExpectedException]
-        public void ConstructorProvider_InvalidArgumentTypes_Exception()
+        public void ConstructorProvider_InvalidArgumentType_Exception()
         {
             var typeInfo = typeof(Immutable).GetTypeInfo();
             var ctorInfo = typeInfo.DeclaredConstructors.First();
@@ -56,13 +55,7 @@ namespace With.Extensions.Tests
         }
 
         [Test]
-        public void ConstructorProvider_InheritedArgumentTypes_OK()
-        {
-
-        }
-
-        [Test]
-        public void ConstructorProvider_ExactArgumentTypes_OK()
+        public void ConstructorProvider_MatchingArgumentTypes_OK()
         {
             const string firstFieldValue = "First value";
             DateTime secondFieldValue = DateTime.MaxValue;
@@ -78,6 +71,23 @@ namespace With.Extensions.Tests
                 newObj.FirstField == firstFieldValue &&
                 newObj.SecondField == secondFieldValue &&
                 newObj.ThirdField == thirdFieldValue);
+        }
+
+        [Test]
+        public void ConstructorProvider_MatchingSubClassArgumentTypes_OK()
+        {
+            var typeInfo = typeof(Tuple<string, Immutable>).GetTypeInfo();
+            var ctorInfo = typeInfo.DeclaredConstructors.First();
+            var constructor = this._provider(ctorInfo);
+
+            var item1 = "Item1 value";
+            var subClassItem2 = new Immutable_SubClass("Item2", new DateTime(2015, 1, 1), 1, 1.0f);
+            var newObj = (Tuple<string, Immutable>)constructor(new object[] { item1, subClassItem2 });
+
+            Assert.IsTrue(
+                newObj.GetType() == typeof(Tuple<string, Immutable>) &&
+                newObj.Item1 == item1 &&
+                newObj.Item2 == subClassItem2);
         }
     }
 }

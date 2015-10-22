@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace With.Tests.ClassPatterns
+namespace With.Extensions.Tests
 {
     public class Immutable_OtherNamingConvention
     {

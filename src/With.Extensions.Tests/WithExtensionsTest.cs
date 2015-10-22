@@ -1,15 +1,14 @@
 ﻿using System;
 using NUnit.Framework;
-using With.Tests.ClassPatterns;
 
-namespace With.Tests
+namespace With.Extensions.Tests
 {
     [TestFixture]
     public class WithExtensionTest
     {
         [Test]
         [ExpectedException(exceptionType: typeof(InvalidOperationException))]
-        public void With_MultipleCtorsObject_Exception()
+        public void With_ClassWithMultipleCtors_Exception()
         {
             // Test
             var obj = new Immutable_MultipleCtors();
@@ -100,7 +99,7 @@ namespace With.Tests
 
             // Setup
             WithExtensions.ConstructorProvider = ctorInfos => args => Tuple.Create((string)args[0], (int)args[1]);
-
+            
             // Test
             var obj = Tuple.Create("First Value", secondValue);
             var obj2 = obj.With(o => o.Item1, newFirstValue).Create();

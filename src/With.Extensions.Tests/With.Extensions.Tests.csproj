@@ -34,13 +34,15 @@
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassPatterns\Immutable_NonPublicProperties.cs" />
     <Compile Include="ClassPatterns\Immutable.cs" />
+    <Compile Include="ClassPatterns\Immutable_Subclass.cs" />
     <Compile Include="ClassPatterns\Immutable_MultipleCtors.cs" />
     <Compile Include="ClassPatterns\Immutable_OtherNamingConvention.cs" />
     <Compile Include="ClassPatterns\Mutable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\AbstractConstructorProviderTest.cs" />
-    <Compile Include="Providers\AbstractAccessorProviderTest.cs" />
+    <Compile Include="Providers\CoreConstructorProviderTest.cs" />
+    <Compile Include="Providers\CoreAccessorProviderTest.cs" />
     <Compile Include="Providers\ExpressionProvidersTest.cs" />
     <Compile Include="Providers\ReflectionProvidersTest.cs" />
     <Compile Include="WithExtensionsTest.cs" />
@@ -60,17 +62,6 @@
       <ItemGroup>
         <Reference Include="nunit.framework">
           <HintPath>..\..\packages\NUnit\lib\nunit.framework.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6')">
-      <ItemGroup>
-        <Reference Include="Rhino.Mocks">
-          <HintPath>..\..\packages\RhinoMocks\lib\net\Rhino.Mocks.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
