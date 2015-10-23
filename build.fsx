@@ -3,7 +3,7 @@
 open Fake
 open Fake.AssemblyInfoFile
 
-let version = "0.6.1"
+let version = "0.6.2"
 
 // NuGet settings
 let nugetToolPath = "./.nuget"

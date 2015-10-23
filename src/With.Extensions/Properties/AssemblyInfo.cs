@@ -8,10 +8,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProductAttribute("With.Extensions")]
 [assembly: AssemblyCompanyAttribute("Emmanuel Horrent")]
 [assembly: AssemblyCopyrightAttribute("Copyright © Emmanuel Horrent 2015")]
-[assembly: AssemblyVersionAttribute("0.6.1")]
-[assembly: AssemblyFileVersionAttribute("0.6.1")]
+[assembly: AssemblyVersionAttribute("0.6.2")]
+[assembly: AssemblyFileVersionAttribute("0.6.2")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "0.6.1";
+        internal const string Version = "0.6.2";
     }
 }
