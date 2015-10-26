@@ -1,4 +1,14 @@
 @echo off
 cls
+
+.paket\paket.bootstrapper.exe
+if errorlevel 1 (
+  exit /b %errorlevel%
+)
+
 .paket\paket.exe restore
-.\packages\FAKE\tools\Fake.exe build.fsx %*
+if errorlevel 1 (
+  exit /b %errorlevel%
+)
+
+packages\FAKE\tools\FAKE.exe build.fsx %*
