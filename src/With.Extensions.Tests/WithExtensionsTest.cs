@@ -36,6 +36,23 @@ namespace With.Extensions.Tests
         }
 
         [Test]
+        public void With_ClassWithSingleConstructorAndMultipleStaticCtors_Ok()
+        {
+            const string newFirstValue = "New first Value";
+
+            // Setup
+            WithExtensions.ConstructorProvider = ctorInfos => args => new Immutable_StaticConstructors((string)args[0], (int)args[1]);
+
+            // Test
+            var obj = new Immutable_StaticConstructors("first value", 10);
+            var obj2 = obj.With(current => current.FirstField, newFirstValue).Create();
+
+            Assert.IsTrue(
+                obj2.FirstField == newFirstValue &&
+                obj2.SecondField == obj.SecondField);
+        }
+
+        [Test]
         public void With_OtherNamingConvention_Ok()
         {
             const string newFirstValue = "New first Value";

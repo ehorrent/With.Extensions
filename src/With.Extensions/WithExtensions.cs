@@ -123,7 +123,7 @@ namespace With
 
             // Check if unique constructor is available
             var typeInfo = typeToBuild.GetTypeInfo();
-            var ctorInfos = typeInfo.DeclaredConstructors;
+            var ctorInfos = typeInfo.DeclaredConstructors.Where(ctor => !ctor.IsStatic).ToList();
             if (1 != ctorInfos.Count())
                 throw new InvalidOperationException(
                     string.Format(

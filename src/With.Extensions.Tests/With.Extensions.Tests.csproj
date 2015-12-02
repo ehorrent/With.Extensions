@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="ClassPatterns\Immutable_NonPublicProperties.cs" />
     <Compile Include="ClassPatterns\Immutable.cs" />
+    <Compile Include="ClassPatterns\Immutable_StaticConstructors.cs" />
     <Compile Include="ClassPatterns\Immutable_Subclass.cs" />
     <Compile Include="ClassPatterns\Immutable_MultipleCtors.cs" />
     <Compile Include="ClassPatterns\Immutable_OtherNamingConvention.cs" />
