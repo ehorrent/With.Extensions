@@ -21,7 +21,7 @@ This project has been created to supply extensions to **duplicate easily your im
 
   Debug.Assert(
   	updated.Item1 == "new first value" &&
-  	updated.Item2 == obj.SecondField);
+  	updated.Item2 == source.Item2);
 ```
 #### Chaining
 Calling **_With extension_** will cause all future method calls to return wrapped query objects. When you've finished, call **_Create()_** to get the final value.
@@ -38,7 +38,7 @@ Calling **_With extension_** will cause all future method calls to return wrappe
   Debug.Assert(
     updated.Item1 == 2 &&
     updated.Item2 == 4 &&
-    updated.Item3 == 3);
+    updated.Item3 == source.Item3);
 ```
 ## How does it work ?
 For a given immutable class, the extension search for actual values to use as parameters in the constructor (by using parameter's name).
