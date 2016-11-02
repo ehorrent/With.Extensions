@@ -3,10 +3,9 @@
 open Fake
 open Fake.AssemblyInfoFile
 
-let version = "0.6.3"
+let version = "1.0.0"
 
 // NuGet settings
-let nugetToolPath = "./.nuget"
 let nugetPackageDir = "./.nuget/nupkg"
 
 // NUnit settings

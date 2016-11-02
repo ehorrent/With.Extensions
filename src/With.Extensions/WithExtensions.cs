@@ -53,6 +53,24 @@ namespace With
         public static Func<Type, string, PropertyOrFieldAccessor> AccessorProvider { get; set; }
 
         /// <summary>
+        /// Copy an object with a single property/field value updated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the object to 'copy and update'</typeparam>
+        /// <typeparam name="TPropertyOrField">Type of the field/property to update</typeparam>
+        /// <param name="source">Object to copy and update</param>
+        /// <param name="propertyOrFieldSelector">Selector on the field/property to update</param>
+        /// <param name="value">New value for the field/property</param>
+        /// <returns>New object, with updated field/property</returns>
+        public static TSource CopyWith<TSource, TPropertyOrField>(
+            this TSource source,
+            Expression<Func<TSource, TPropertyOrField>> propertyOrFieldSelector,
+            TPropertyOrField value)
+            where TSource : class
+        {
+            return source.With(propertyOrFieldSelector, value).Create();
+        }
+
+        /// <summary>
         /// Creates a query to copy and update an object.
         /// </summary>
         /// <typeparam name="TSource">Type of the object to 'copy and update'</typeparam>

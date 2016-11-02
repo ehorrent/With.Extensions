@@ -4,3 +4,4 @@
 *.Extensions.userprefs
 /.fake/
 /reports/
+/.vscode/

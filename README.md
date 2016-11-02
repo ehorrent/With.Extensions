@@ -13,15 +13,27 @@ This project has been created to supply extensions to **duplicate easily your im
 
 ## Usage
 ```C#
-  var source = Tuple.Create("first value", "second value");
+  var source = Tuple.Create("first value", "second value", "third value");
 
-  // Copy and update 'Item1' member
-  var updated = source.With(obj => obj.Item1, "new first value")
-                      .Create();  
+  // If you have multiple fields to update
+  var updated = source
+    .With(obj => obj.Item1, "new first value")
+    .With(obj => obj.Item2, "new second value")
+    .Create(); 
 
   Debug.Assert(
-  	updated.Item1 == "new first value" &&
-  	updated.Item2 == source.Item2);
+    updated.Item1 == "new first value" &&
+    updated.Item2 == "new second value" &&
+    updated.Item3 == source.Item3);
+
+  // Or if you have a single field to update
+  var updated2 = source.CopyWith(obj => obj.Item1, "new first value");
+
+  Debug.Assert(
+    updated2.Item1 == "new first value" &&
+    updated2.Item2 == source.Item2 &&
+    updated2.Item3 == source.Item3);
+
 ```
 #### Chaining
 Calling **_With extension_** will cause all future method calls to return wrapped query objects. When you've finished, call **_Create()_** to get the final value.
