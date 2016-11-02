@@ -42,15 +42,27 @@
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
 
-<div class="highlight highlight-source-cs"><pre>  <span class="pl-k">var</span> source = Tuple.Create(<span class="pl-s"><span class="pl-pds">"</span>first value<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>second value<span class="pl-pds">"</span></span>);
+<div class="highlight highlight-source-cs"><pre>  <span class="pl-k">var</span> source = Tuple.Create(<span class="pl-s"><span class="pl-pds">"</span>first value<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>second value<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>third value<span class="pl-pds">"</span></span>);
 
-  <span class="pl-c">// Copy and update 'Item1' member</span>
-  <span class="pl-k">var</span> updated = source.With(obj =&gt; obj.Item1, <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span>)
-                      .Create();  
+  <span class="pl-c">// If you have multiple fields to update</span>
+  <span class="pl-k">var</span> updated = source
+    .With(obj =&gt; obj.Item1, <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span>)
+    .With(obj =&gt; obj.Item2, <span class="pl-s"><span class="pl-pds">"</span>new second value<span class="pl-pds">"</span></span>)
+    .Create(); 
 
   Debug.Assert(
     updated.Item1 == <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span> &amp;&amp;
-    updated.Item2 == source.Item2);</pre></div>
+    updated.Item2 == <span class="pl-s"><span class="pl-pds">"</span>new second value<span class="pl-pds">"</span></span> &amp;&amp;
+    updated.Item3 == source.Item3);
+
+  <span class="pl-c">// Or if you have a single field to update</span>
+  <span class="pl-k">var</span> updated2 = source.CopyWith(obj =&gt; obj.Item1, <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span>);
+
+  Debug.Assert(
+    updated2.Item1 == <span class="pl-s"><span class="pl-pds">"</span>new first value<span class="pl-pds">"</span></span> &amp;&amp;
+    updated2.Item2 == source.Item2 &amp;&amp;
+    updated2.Item3 == source.Item3);
+</pre></div>
 
 <h4>
 <a id="chaining" class="anchor" href="#chaining" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Chaining</h4>
