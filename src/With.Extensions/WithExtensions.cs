@@ -33,11 +33,8 @@ namespace With
         /// </summary>
         static WithExtensions()
         {
-            ConstructorProvider = ExpressionProviders.BuildConstructor;
-            ConstructorProvider = Cache.Memoize(ConstructorProvider);
-
-            AccessorProvider = ExpressionProviders.BuildPropertyOrFieldAccessor;
-            AccessorProvider = Cache.Memoize(AccessorProvider);
+            ConstructorProvider = Cache.Memoize<ConstructorInfo, Constructor>(ExpressionProviders.BuildConstructor);
+            AccessorProvider = Cache.Memoize<Type, string, PropertyOrFieldAccessor>(ExpressionProviders.BuildPropertyOrFieldAccessor);
         }
 
         /// <summary>
