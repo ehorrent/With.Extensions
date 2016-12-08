@@ -5,7 +5,7 @@ Extension methods used to copy and update immutable classes (as [_copy and updat
 ## Why ?
 When using immutables classes with **C#**, it becomes really annoying to copy and update an object. To do that, you have 2 options :
 - use the constructor (verbose and add 'noise' on what you really want to do)
-- create manually copy methods to duplicate your object
+- create manually copy methods to duplicate your objects
 
 The second solution makes your code more readable but you have to create methods for each field you want to modify in your class, and it can be a lot of work...
 
@@ -53,7 +53,6 @@ For example, if you use 'm_' prefixes like below :
   {
     public readonly string m_FirstField;
     public readonly string m_SecondField;
-
     public Immutable(string firstField, string secondField)
     {
       this.m_FirstField = firstField;
@@ -91,8 +90,8 @@ Performances are much more better than with pure reflection, at the cost of comp
 
 Expression providers are configured by default as below :
 ```C#
-ConstructorProvider = Cache.Memoize<ConstructorInfo, Constructor>(ExpressionProviders.BuildConstructor);
-AccessorProvider = Cache.Memoize<Type, string, PropertyOrFieldAccessor>(ExpressionProviders.BuildPropertyOrFieldAccessor);
+WithExtensions.ConstructorProvider = Cache.Memoize<ConstructorInfo, Constructor>(ExpressionProviders.BuildConstructor);
+WithExtensions.AccessorProvider = Cache.Memoize<Type, string, PropertyOrFieldAccessor>(ExpressionProviders.BuildPropertyOrFieldAccessor);
 ```
 - ReflectionProviders
 
@@ -100,11 +99,8 @@ Providers using pure reflection to create new instances.
 You can use this provider by making these changes at your application startup :
 
 ```C#
-using With;
-using With.Providers;
-...
 WithExtensions.ConstructorProvider = ReflectionProviders.GetConstructor;
-AccessorProvider = ReflectionProviders.GetPropertyOrFieldAccessor;
+WithExtensions.AccessorProvider = ReflectionProviders.GetPropertyOrFieldAccessor;
 ```
 
 ## Download
